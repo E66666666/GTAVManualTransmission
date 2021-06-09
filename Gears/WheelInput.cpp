@@ -21,7 +21,7 @@
 #include <inc/types.h>
 
 #include <MiniPID/MiniPID.h>
-#include <fmt/format.h>
+#include <format>
 #include <algorithm>
 
 using VExt = VehicleExtensions;
@@ -707,10 +707,10 @@ int calculateSat(int defaultGain, float steeringAngle, float wheelsOffGroundRati
     }
 
     if (g_settings.Debug.DisplayInfo) {
-        //UI::ShowText(0.85, 0.175, 0.4, fmt::format("RelSteer:\t{:.3f}", steeringRelative.x), 4);
-        //UI::ShowText(0.85, 0.200, 0.4, fmt::format("SetPoint:\t{:.3f}", travelRelative.x), 4);
-        UI::ShowText(0.85, 0.225, 0.4, fmt::format("Error:\t\t{:.3f}", error), 4);
-        UI::ShowText(0.85, 0.250, 0.4, fmt::format("{}Under:\t\t{:.3f}~w~", understeering ? "~b~" : "~w~", understeer), 4);
+        //UI::ShowText(0.85, 0.175, 0.4, std::format("RelSteer:\t{:.3f}", steeringRelative.x), 4);
+        //UI::ShowText(0.85, 0.200, 0.4, std::format("SetPoint:\t{:.3f}", travelRelative.x), 4);
+        UI::ShowText(0.85, 0.225, 0.4, std::format("Error:\t\t{:.3f}", error), 4);
+        UI::ShowText(0.85, 0.250, 0.4, std::format("{}Under:\t\t{:.3f}~w~", understeering ? "~b~" : "~w~", understeer), 4);
     }
     float adf = static_cast<float>(g_settings.Wheel.FFB.AntiDeadForce);
     if (satForce > 0.0f) {
@@ -828,15 +828,15 @@ void WheelInput::PlayFFBGround() {
     }
 
     if (collision) {
-        UI::Notify(DEBUG, fmt::format("Collision @ ~r~{:.3f}G~w~~n~"
+        UI::Notify(DEBUG, std::format("Collision @ ~r~{:.3f}G~w~~n~"
             "FFB: {}", gForce, res));
     }
 
     if (g_settings.Debug.DisplayInfo) {
-        UI::ShowText(0.85, 0.275, 0.4, fmt::format("{}FFBSat:\t\t{}~w~", abs(satForce) > g_settings.Wheel.FFB.SATMax ? "~r~" : "~w~", satForce), 4);
-        UI::ShowText(0.85, 0.300, 0.4, fmt::format("{}FFBFin:\t\t{}~w~", abs(totalForce) > 10000 ? "~r~" : "~w~", totalForce), 4);
-        UI::ShowText(0.85, 0.325, 0.4, fmt::format("Damper:\t\t{}", damperForce), 4);
-        UI::ShowText(0.85, 0.350, 0.4, fmt::format("Detail:\t\t{}", detailForce), 4);
+        UI::ShowText(0.85, 0.275, 0.4, std::format("{}FFBSat:\t\t{}~w~", abs(satForce) > g_settings.Wheel.FFB.SATMax ? "~r~" : "~w~", satForce), 4);
+        UI::ShowText(0.85, 0.300, 0.4, std::format("{}FFBFin:\t\t{}~w~", abs(totalForce) > 10000 ? "~r~" : "~w~", totalForce), 4);
+        UI::ShowText(0.85, 0.325, 0.4, std::format("Damper:\t\t{}", damperForce), 4);
+        UI::ShowText(0.85, 0.350, 0.4, std::format("Detail:\t\t{}", detailForce), 4);
     }
 }
 
@@ -868,8 +868,8 @@ void WheelInput::PlayFFBWater() {
     g_controls.PlayFFBDynamics(totalForce, damperForce);
 
     if (g_settings.Debug.DisplayInfo) {
-        UI::ShowText(0.85, 0.275, 0.4, fmt::format("{}FFBSat:\t\t{}~w~", abs(satForce) > 10000 ? "~r~" : "~w~", satForce), 4);
-        UI::ShowText(0.85, 0.300, 0.4, fmt::format("{}FFBFin:\t\t{}~w~", abs(totalForce) > 10000 ? "~r~" : "~w~", totalForce), 4);
-        UI::ShowText(0.85, 0.325, 0.4, fmt::format("Damper:\t{}", damperForce), 4);
+        UI::ShowText(0.85, 0.275, 0.4, std::format("{}FFBSat:\t\t{}~w~", abs(satForce) > 10000 ? "~r~" : "~w~", satForce), 4);
+        UI::ShowText(0.85, 0.300, 0.4, std::format("{}FFBFin:\t\t{}~w~", abs(totalForce) > 10000 ? "~r~" : "~w~", totalForce), 4);
+        UI::ShowText(0.85, 0.325, 0.4, std::format("Damper:\t{}", damperForce), 4);
     }
 }

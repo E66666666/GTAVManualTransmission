@@ -14,7 +14,7 @@
 
 #include <inc/enums.h>
 #include <inc/natives.h>
-#include <fmt/format.h>
+#include <format>
 
 using VExt = VehicleExtensions;
 

@@ -14,9 +14,9 @@
 #include "Util/ScriptUtils.h"
 
 #include <inc/natives.h>
-#include <fmt/format.h>
 #include <yaml-cpp/yaml.h>
 
+#include <format>
 #include <vector>
 #include <string>
 #include <algorithm>
@@ -134,7 +134,7 @@ void SteeringAnimation::Update() {
 
 void SteeringAnimation::Load() {
     if (!FileExists(animFile)) {
-        logger.Write(ERROR, fmt::format("Animation: File \"{}\" not found, skipping animations", animFile));
+        logger.Write(ERROR, std::format("Animation: File \"{}\" not found, skipping animations", animFile));
         fileProblem = true;
         return;
     }
@@ -146,18 +146,18 @@ void SteeringAnimation::Load() {
 
         steeringAnimations.clear();
         steeringAnimations = animRoot["Animations"].as<std::vector<Animation>>();
-        logger.Write(DEBUG, fmt::format("Animation: Loaded {} animations", steeringAnimations.size()));
+        logger.Write(DEBUG, std::format("Animation: Loaded {} animations", steeringAnimations.size()));
         fileProblem = false;
     }
     catch (const YAML::ParserException& ex) {
-        logger.Write(ERROR, fmt::format("Encountered a YAML exception (parse)"));
-        logger.Write(ERROR, fmt::format("{}", ex.what()));
-        logger.Write(ERROR, fmt::format("at Line {}, Column {}", ex.mark.line, ex.mark.column));
-        logger.Write(ERROR, fmt::format("msg: {}", ex.msg));
+        logger.Write(ERROR, std::format("Encountered a YAML exception (parse)"));
+        logger.Write(ERROR, std::format("{}", ex.what()));
+        logger.Write(ERROR, std::format("at Line {}, Column {}", ex.mark.line, ex.mark.column));
+        logger.Write(ERROR, std::format("msg: {}", ex.msg));
     }
     catch (const std::exception& ex) {
-        logger.Write(ERROR, fmt::format("Encountered a YAML exception (std)"));
-        logger.Write(ERROR, fmt::format("{}", ex.what()));
+        logger.Write(ERROR, std::format("Encountered a YAML exception (std)"));
+        logger.Write(ERROR, std::format("{}", ex.what()));
     }
 }
 
@@ -172,7 +172,7 @@ void cancelAnim(const SteeringAnimation::Animation& anim) {
     const bool playing = ENTITY::IS_ENTITY_PLAYING_ANIM(g_playerPed, dict, name, 3);
 
     if (playing) {
-        UI::Notify(DEBUG, fmt::format("Cancelled steering animation ({})", lastAnimation.Dictionary), false);
+        UI::Notify(DEBUG, std::format("Cancelled steering animation ({})", lastAnimation.Dictionary), false);
         TASK::STOP_ANIM_TASK(g_playerPed, dict, name, -8.0f);
         lastAnimation = SteeringAnimation::Animation();
     }
@@ -194,8 +194,8 @@ void playAnimTime(const SteeringAnimation::Animation& anim, float time) {
         Timer t(500);
 
         if (!STREAMING::DOES_ANIM_DICT_EXIST(dict)) {
-            UI::Notify(ERROR, fmt::format("Animation: dictionary does not exist [{}]", dict), false);
-            logger.Write(ERROR, fmt::format("Animation: dictionary does not exist [{}]", dict));
+            UI::Notify(ERROR, std::format("Animation: dictionary does not exist [{}]", dict), false);
+            logger.Write(ERROR, std::format("Animation: dictionary does not exist [{}]", dict));
             // Clear dict so we don't keep loading it
             steeringAnimations[steeringAnimIdx].Dictionary = std::string();
             return;
@@ -204,8 +204,8 @@ void playAnimTime(const SteeringAnimation::Animation& anim, float time) {
         STREAMING::REQUEST_ANIM_DICT(dict);
         while (!STREAMING::HAS_ANIM_DICT_LOADED(dict)) {
             if (t.Expired()) {
-                UI::Notify(ERROR, fmt::format("Failed to load animation dictionary [{}]", dict), false);
-                logger.Write(ERROR, fmt::format("Animation: Failed to load dictionary [{}]", dict));
+                UI::Notify(ERROR, std::format("Failed to load animation dictionary [{}]", dict), false);
+                logger.Write(ERROR, std::format("Animation: Failed to load dictionary [{}]", dict));
                 // Clear dict so we don't keep loading it
                 steeringAnimations[steeringAnimIdx].Dictionary = std::string();
                 return;
@@ -216,7 +216,7 @@ void playAnimTime(const SteeringAnimation::Animation& anim, float time) {
         constexpr int flag = ANIM_FLAG_ENABLE_PLAYER_CONTROL;
         TASK::TASK_PLAY_ANIM(g_playerPed, dict, name, -8.0f, 8.0f, -1, flag, 1.0f, 0, 0, 0);
         lastAnimation = anim;
-        UI::Notify(DEBUG, fmt::format("Started steering animation ({})", lastAnimation.Dictionary), false);
+        UI::Notify(DEBUG, std::format("Started steering animation ({})", lastAnimation.Dictionary), false);
     }
     else {
         ENTITY::SET_ENTITY_ANIM_SPEED(g_playerPed, dict, name, 0.0f);

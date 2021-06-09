@@ -6,11 +6,10 @@
 #include "Memory/VehicleExtensions.hpp"
 
 #include "Util/MathExt.h"
+#include "Util/UIUtils.h"
 
 #include <inc/natives.h>
-#include <fmt/format.h>
-
-#include "Util/UIUtils.h"
+#include <format>
 
 using VExt = VehicleExtensions;
 

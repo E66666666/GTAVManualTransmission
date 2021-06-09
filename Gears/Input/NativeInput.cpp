@@ -59,25 +59,25 @@ bool NativeInput::WasButtonHeldOverMs(eControl gameButton, int milliseconds) {
 NativeInput::TapState NativeInput::WasButtonTapped(eControl gameButton, int milliseconds) {
     if (IsButtonJustPressed(gameButton)) {
         tapPressTime[gameButton] = GetTickCount64();
-        //showText(0.7f, 0.125f, 0.5f, fmt::format("just press"));
+        //showText(0.7f, 0.125f, 0.5f, std::format("just press"));
     }
     if (IsButtonJustReleased(gameButton)) {
         tapReleaseTime[gameButton] = GetTickCount64();
-        //showText(0.7f, 0.125f, 0.5f, fmt::format("just rel"));
+        //showText(0.7f, 0.125f, 0.5f, std::format("just rel"));
     }
 
     if ((tapReleaseTime[gameButton] - tapPressTime[gameButton]) > 1 &&
         (tapReleaseTime[gameButton] - tapPressTime[gameButton]) <= milliseconds) {
         tapPressTime[gameButton] = 0;
         tapReleaseTime[gameButton] = 0;
-        //showText(0.7f, 0.10f, 0.5f, fmt::format("tapped"));
+        //showText(0.7f, 0.10f, 0.5f, std::format("tapped"));
         return TapState::Tapped;
     }
     if ((GetTickCount64() - tapPressTime[gameButton]) <= milliseconds) {
-        //showText(0.7f, 0.10f, 0.5f, fmt::format("down"));
+        //showText(0.7f, 0.10f, 0.5f, std::format("down"));
         return TapState::ButtonDown;
     }
-    //showText(0.7f, 0.10f, 0.5f, fmt::format("up"));
+    //showText(0.7f, 0.10f, 0.5f, std::format("up"));
     return TapState::ButtonUp;
 }
 

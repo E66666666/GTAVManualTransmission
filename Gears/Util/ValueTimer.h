@@ -1,7 +1,7 @@
 #pragma once
 #include "MathExt.h"
 #include "Timer.h"
-#include <fmt/format.h>
+#include <format>
 #include <string>
 #include <functional>
 
@@ -34,7 +34,7 @@ public:
         if (triggeredNow) {
             mTriggered = true;
             auto millis = mTimer.Elapsed();
-            mFunc(fmt::format("Timer: \n{} - {} {}: {}.{:03d}",
+            mFunc(std::format("Timer: \n{} - {} {}: {}.{:03d}",
                 mLimA, mLimB, mUnit, millis / 1000, millis % 1000));
         }
     }

@@ -49,7 +49,7 @@
 #include <inc/main.h>
 #include <inc/types.h>
 
-#include <fmt/format.h>
+#include <format>
 #include <string>
 #include <algorithm>
 #include <thread>
@@ -240,7 +240,7 @@ void setVehicleConfig(Vehicle vehicle) {
         if (itMatch != g_vehConfigs.end()) {
             g_settings.SetVehicleConfig(&*itMatch);
             if (itMatch->Name != oldName) {
-                UI::Notify(INFO, fmt::format("Configuration [{}] loaded.", itMatch->Name));
+                UI::Notify(INFO, std::format("Configuration [{}] loaded.", itMatch->Name));
             }
         }
     }
@@ -268,7 +268,7 @@ void updateActiveSteeringAnim(Vehicle vehicle) {
             break;
     }
     if (animIdx == anims.size() && layoutHash != 0) {
-        std::string msg = fmt::format("Animation: No valid animation found for layout hash 0x{:08X}", layoutHash);
+        std::string msg = std::format("Animation: No valid animation found for layout hash 0x{:08X}", layoutHash);
         logger.Write(WARN, msg);
         UI::Notify(DEBUG, msg);
     }
@@ -612,7 +612,7 @@ void update_manual_transmission() {
                 0.01f,
                 customMax);
             g_settings().DriveAssists.AWD.CustomBaseBias = bias;
-            UI::Notify(INFO, fmt::format("Drive bias: {:.0f}F/{:.0f}R", bias * 100.0f, (1.0f - bias) * 100.0f), true);
+            UI::Notify(INFO, std::format("Drive bias: {:.0f}F/{:.0f}R", bias * 100.0f, (1.0f - bias) * 100.0f), true);
         }
 
         if (g_controls.ButtonJustPressed(CarControls::KeyboardControlType::DriveBiasFDec) ||
@@ -625,7 +625,7 @@ void update_manual_transmission() {
                 customMin,
                 0.99f);
             g_settings().DriveAssists.AWD.CustomBaseBias = bias;
-            UI::Notify(INFO, fmt::format("Drive bias: {:.0f}F/{:.0f}R", bias * 100.0f, (1.0f - bias) * 100.0f), true);
+            UI::Notify(INFO, std::format("Drive bias: {:.0f}F/{:.0f}R", bias * 100.0f, (1.0f - bias) * 100.0f), true);
         }
     }
 
@@ -646,7 +646,7 @@ void update_manual_transmission() {
             float speedValUnit = speed * speedValMul;
             speedValUnit = std::clamp(speedValUnit + 5.0f, 0.0f, 500.0f);
             g_settings().DriveAssists.CruiseControl.Speed = speedValUnit / speedValMul;
-            UI::Notify(INFO, fmt::format("Cruise control {:.0f} {}", speedValUnit, speedNameUnit), true);
+            UI::Notify(INFO, std::format("Cruise control {:.0f} {}", speedValUnit, speedNameUnit), true);
         }
 
         if (g_controls.ButtonJustPressed(CarControls::KeyboardControlType::CCDec) ||
@@ -658,7 +658,7 @@ void update_manual_transmission() {
             float speedValUnit = speed * speedValMul;
             speedValUnit = std::clamp(speedValUnit - 5.0f, 0.0f, 500.0f);
             g_settings().DriveAssists.CruiseControl.Speed = speedValUnit / speedValMul;
-            UI::Notify(INFO, fmt::format("Cruise control {:.0f} {}", speedValUnit, speedNameUnit), true);
+            UI::Notify(INFO, std::format("Cruise control {:.0f} {}", speedValUnit, speedNameUnit), true);
         }
     }
 
@@ -668,25 +668,25 @@ void update_manual_transmission() {
         g_controls.PrevInput == CarControls::Controller && g_controls.ButtonHeld(CarControls::LegacyControlType::ToggleLC)) {
         bool newValue = !g_settings().DriveAssists.LaunchControl.Enable;
         g_settings().DriveAssists.LaunchControl.Enable = newValue;
-        UI::Notify(INFO, fmt::format("Launch control {}", newValue ? "~g~ON" : "~r~OFF"));
+        UI::Notify(INFO, std::format("Launch control {}", newValue ? "~g~ON" : "~r~OFF"));
     }
 
     if (g_controls.ButtonJustPressed(CarControls::KeyboardControlType::ToggleABS) ||
         g_controls.ButtonJustPressed(CarControls::WheelControlType::ToggleABS)) {
         bool newState = !g_settings().DriveAssists.ABS.Enable;
-        UI::Notify(INFO, fmt::format("ABS {}", newState ? "~g~ON" : "~r~OFF"));
+        UI::Notify(INFO, std::format("ABS {}", newState ? "~g~ON" : "~r~OFF"));
         g_settings().DriveAssists.ABS.Enable = newState;
     }
     if (g_controls.ButtonJustPressed(CarControls::KeyboardControlType::ToggleESC) ||
         g_controls.ButtonJustPressed(CarControls::WheelControlType::ToggleESC)) {
         bool newState = !g_settings().DriveAssists.ESP.Enable;
-        UI::Notify(INFO, fmt::format("ESC {}", newState ? "~g~ON" : "~r~OFF"));
+        UI::Notify(INFO, std::format("ESC {}", newState ? "~g~ON" : "~r~OFF"));
         g_settings().DriveAssists.ESP.Enable = newState;
     }
     if (g_controls.ButtonJustPressed(CarControls::KeyboardControlType::ToggleTCS) ||
         g_controls.ButtonJustPressed(CarControls::WheelControlType::ToggleTCS)) {
         bool newState = !g_settings().DriveAssists.TCS.Enable;
-        UI::Notify(INFO, fmt::format("TCS {}", newState ? "~g~ON" : "~r~OFF"));
+        UI::Notify(INFO, std::format("TCS {}", newState ? "~g~ON" : "~r~OFF"));
         g_settings().DriveAssists.TCS.Enable = newState;
     }
 
@@ -1361,22 +1361,22 @@ void functionAShift() {
     // float spd = ENTITY::GET_ENTITY_SPEED(g_playerVehicle);
     // float vDash = VExt::GetDashSpeed(g_playerVehicle);
     // 
-    // UI::ShowText(0.35f, 0.00f, 0.5f, fmt::format("vec.y: {:.2f}", g_vehData.mVelocity.y));
+    // UI::ShowText(0.35f, 0.00f, 0.5f, std::format("vec.y: {:.2f}", g_vehData.mVelocity.y));
     // UI::DrawBar(0.65f, vOff, 0.25f, 0.025f, Util::ColorsI::SolidWhite, Util::ColorsI::TransparentGray, g_vehData.mVelocity.y * scl);
     // 
-    // UI::ShowText(0.35f, 0.05f, 0.5f, fmt::format("spd: {:.2f}", spd));
+    // UI::ShowText(0.35f, 0.05f, 0.5f, std::format("spd: {:.2f}", spd));
     // UI::DrawBar(0.65f, vOff + 0.05f, 0.25f, 0.025f, Util::ColorsI::SolidWhite, Util::ColorsI::TransparentGray, spd * scl);
     // 
-    // UI::ShowText(0.35f, 0.10f, 0.5f, fmt::format("diff: {:.2f}", g_vehData.mDiffSpeed));
+    // UI::ShowText(0.35f, 0.10f, 0.5f, std::format("diff: {:.2f}", g_vehData.mDiffSpeed));
     // UI::DrawBar(0.65f, vOff + 0.10f, 0.25f, 0.025f, Util::ColorsI::SolidWhite, Util::ColorsI::TransparentGray, g_vehData.mDiffSpeed * scl);
     // 
-    // UI::ShowText(0.35f, 0.15f, 0.5f, fmt::format("dash: {:.2f}", vDash));
+    // UI::ShowText(0.35f, 0.15f, 0.5f, std::format("dash: {:.2f}", vDash));
     // UI::DrawBar(0.65f, vOff + 0.15f, 0.25f, 0.025f, Util::ColorsI::SolidWhite, Util::ColorsI::TransparentGray, vDash * scl);
     // 
-    // UI::ShowText(0.35f, 0.20f, 0.5f, fmt::format("nonlock: {:.2f}", g_vehData.mNonLockSpeed));
+    // UI::ShowText(0.35f, 0.20f, 0.5f, std::format("nonlock: {:.2f}", g_vehData.mNonLockSpeed));
     // UI::DrawBar(0.65f, vOff + 0.20f, 0.25f, 0.025f, Util::ColorsI::SolidWhite, Util::ColorsI::TransparentGray, g_vehData.mNonLockSpeed * scl);
     // 
-    // UI::ShowText(0.35f, 0.25f, 0.5f, fmt::format("est spd: {:.2f}", g_vehData.mEstimatedSpeed));
+    // UI::ShowText(0.35f, 0.25f, 0.5f, std::format("est spd: {:.2f}", g_vehData.mEstimatedSpeed));
     // UI::DrawBar(0.65f, vOff + 0.25f, 0.25f, 0.025f, Util::ColorsI::SolidWhite, Util::ColorsI::TransparentGray, g_vehData.mEstimatedSpeed * scl);
 
     // Manual part
@@ -1410,7 +1410,7 @@ void functionAShift() {
         float currSpeed = g_vehData.mVelocity.y;
         bool skidding = isSkidding(2.4f);
 
-        //UI::ShowText(0.5f, 0.20f, 0.5f, fmt::format("We are {}skidding", skidding ? "" : "not "));
+        //UI::ShowText(0.5f, 0.20f, 0.5f, std::format("We are {}skidding", skidding ? "" : "not "));
 
         float nextGearMinSpeed = 0.0f; // don't care about top gear
         if (currGear < g_vehData.mGearTop) {
@@ -1599,9 +1599,9 @@ void functionEngStall() {
         VEHICLE::SET_VEHICLE_ENGINE_ON(g_playerVehicle, true, true, true);
     }
 
-    //UI::ShowText(0.1, 0.00, 0.4, fmt::format("Stall progress: {:.2f}", g_gearStates.StallProgress));
-    //UI::ShowText(0.1, 0.02, 0.4, fmt::format("Clutch: {}", clutchEngaged));
-    //UI::ShowText(0.1, 0.06, 0.4, fmt::format("SpeedDiffRatio: {:.2f}", speedDiffRatio));
+    //UI::ShowText(0.1, 0.00, 0.4, std::format("Stall progress: {:.2f}", g_gearStates.StallProgress));
+    //UI::ShowText(0.1, 0.02, 0.4, std::format("Clutch: {}", clutchEngaged));
+    //UI::ShowText(0.1, 0.06, 0.4, std::format("SpeedDiffRatio: {:.2f}", speedDiffRatio));
 }
 
 void functionEngDamage() {
@@ -1690,8 +1690,8 @@ void functionEngLock() {
             }
         }
         if (g_settings.Debug.DisplayInfo) {
-            UI::ShowText(0.5, 0.80, 0.25, fmt::format("Eng block: {:.3f}", inputMultiplier));
-            UI::ShowText(0.5, 0.85, 0.25, fmt::format("Eng block force: {:.3f}", lockingForce));
+            UI::ShowText(0.5, 0.80, 0.25, std::format("Eng block: {:.3f}", inputMultiplier));
+            UI::ShowText(0.5, 0.85, 0.25, std::format("Eng block force: {:.3f}", lockingForce));
         }
     }
     else {
@@ -1732,8 +1732,8 @@ void functionEngBrake() {
         }
     }
     if (g_settings.Debug.DisplayInfo) {
-        UI::ShowText(0.85, 0.500, 0.4, fmt::format("EngBrake:\t\t{:.3f}", inputMultiplier), 4);
-        UI::ShowText(0.85, 0.525, 0.4, fmt::format("Pressure:\t\t{:.3f}", engBrakeForce), 4);
+        UI::ShowText(0.85, 0.500, 0.4, std::format("EngBrake:\t\t{:.3f}", inputMultiplier), 4);
+        UI::ShowText(0.85, 0.525, 0.4, std::format("Pressure:\t\t{:.3f}", engBrakeForce), 4);
         UI::ShowText(0.45, 0.75, 1.0, "~r~EngBrake");
     }
 }
@@ -2022,17 +2022,17 @@ void handleBrakePatch() {
     }
 
     if (g_settings.Debug.DisplayInfo) {
-        UI::ShowText(0.60f, 0.100f, 0.25f, fmt::format("{}TCS~s~ / {}LC",
+        UI::ShowText(0.60f, 0.100f, 0.25f, std::format("{}TCS~s~ / {}LC",
             tcsThrottle ? "~g~" : "", lcThrottle ? "~g~" : ""));
-        std::string controlledThrottle = tcsThrottle || lcThrottle ? fmt::format("{:.2f}", tractionThrottle) : "N/A";
-        UI::ShowText(0.60f, 0.125f, 0.25f, fmt::format("Average slip: {:.2f} m/s", tcsData.AverageSlip));
-        UI::ShowText(0.60f, 0.150f, 0.25f, fmt::format("Throttle: {}", controlledThrottle));
+        std::string controlledThrottle = tcsThrottle || lcThrottle ? std::format("{:.2f}", tractionThrottle) : "N/A";
+        UI::ShowText(0.60f, 0.125f, 0.25f, std::format("Average slip: {:.2f} m/s", tcsData.AverageSlip));
+        UI::ShowText(0.60f, 0.150f, 0.25f, std::format("Throttle: {}", controlledThrottle));
 
         if (cutThrottle) {
-            UI::ShowText(0.5f, 0.5f, 0.5f, fmt::format("Cut @ {:.2f}", finalThrottle));
+            UI::ShowText(0.5f, 0.5f, 0.5f, std::format("Cut @ {:.2f}", finalThrottle));
         }
         if (blipThrottle) {
-            UI::ShowText(0.5f, 0.5f, 0.5f, fmt::format("Blip @ {:.2f}", finalThrottle));
+            UI::ShowText(0.5f, 0.5f, 0.5f, std::format("Blip @ {:.2f}", finalThrottle));
         }
     
     }
@@ -2050,7 +2050,7 @@ void fakeRev(bool customThrottle, float customThrottleVal) {
     float rpmVal = g_vehData.mRPM +			// Base value
         rpmValTemp +						// Keep it constant
         throttleVal * accelRatio;	// Addition value, depends on delta T
-    //UI::ShowText(0.4, 0.4, 1.0, fmt::format("FakeRev {} {:.2f}", customThrottle, rpmVal));
+    //UI::ShowText(0.4, 0.4, 1.0, std::format("FakeRev {} {:.2f}", customThrottle, rpmVal));
     VExt::SetCurrentRPM(g_playerVehicle, std::clamp(rpmVal, 0.0f, 1.0f));
 }
 
@@ -2625,14 +2625,14 @@ void update_update_notification() {
         if (g_checkUpdateDone) {
             g_checkUpdateDone = false;
             if (g_notifyUpdate) {
-                UI::Notify(INFO, fmt::format("Manual Transmission: Update available, new version: {}.",
+                UI::Notify(INFO, std::format("Manual Transmission: Update available, new version: {}.",
                                          g_releaseInfo.Version), false);
             }
             else if (g_releaseInfo.Version.empty()) {
                 UI::Notify(INFO, "Manual Transmission: Failed to check for update.", false);
             }
             else {
-                UI::Notify(INFO, fmt::format("Manual Transmission: No update available, latest version: {}.",
+                UI::Notify(INFO, std::format("Manual Transmission: No update available, latest version: {}.",
                                          g_releaseInfo.Version), false);
             }
         }

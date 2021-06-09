@@ -14,9 +14,9 @@
 #include "Util/Paths.h"
 
 #include <inc/main.h>
-#include <fmt/format.h>
 #include <Psapi.h>
 #include <filesystem>
+#include <format>
 
 namespace fs = std::filesystem;
 
@@ -87,7 +87,7 @@ std::string GetTimestampReadable(unsigned long long unixTimestampMs) {
     }
 
     timess << std::put_time(&newtime, "%Y %m %d, %H:%M:%S");
-    return fmt::format("{}", timess.str());
+    return std::format("{}", timess.str());
 }
 
 BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved) {

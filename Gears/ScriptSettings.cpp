@@ -10,8 +10,8 @@
 #include "Input/CarControls.hpp"
 
 #include <simpleini/SimpleIni.h>
-#include <fmt/format.h>
 
+#include <format>
 #include <string>
 
 // TODO: Settings shouldn't *do* anything, other stuff just needs to take stuff from this.
@@ -635,10 +635,10 @@ void ScriptSettings::parseSettingsGeneral() {
     int it = 0;
     Debug.Metrics.Timers.clear();
     while (true) {
-        std::string unitKey = fmt::format("Timer{}Unit", it);
-        std::string limAKey = fmt::format("Timer{}LimA", it);
-        std::string limBKey = fmt::format("Timer{}LimB", it);
-        std::string toleranceKey = fmt::format("Timer{}Tolerance", it);
+        std::string unitKey = std::format("Timer{}Unit", it);
+        std::string limAKey = std::format("Timer{}LimA", it);
+        std::string limBKey = std::format("Timer{}LimB", it);
+        std::string toleranceKey = std::format("Timer{}Tolerance", it);
 
         std::string unit = ini.GetValue("DEBUG", unitKey.c_str(), "");
         if (unit.empty()) {
@@ -932,8 +932,8 @@ void ScriptSettings::parseSettingsWheel(CarControls *scriptControl) {
 
     // [HPATTERN_<gear>]
     for (uint8_t i = 1; i < 11; ++i) {
-        std::string iniStr = fmt::format("HPATTERN_{}", i);
-        std::string menuStr = fmt::format("H-pattern {}", i);
+        std::string iniStr = std::format("HPATTERN_{}", i);
+        std::string menuStr = std::format("H-pattern {}", i);
         scriptControl->WheelButton[i] =
             parseWheelItem<int>(ini, iniStr.c_str(), -1, menuStr.c_str());
     }

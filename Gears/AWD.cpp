@@ -14,10 +14,10 @@
 
 #include <inc/types.h>
 #include <inc/natives.h>
-#include <fmt/format.h>
 
 #include <algorithm>
 #include <cstdint>
+#include <format>
 
 extern Vehicle g_playerVehicle;
 extern ScriptSettings g_settings;
@@ -95,7 +95,7 @@ void AWD::Update() {
         driveBiasFCustom <= 0.0f || driveBiasFCustom >= 1.0f) {
         if (g_settings.Debug.DisplayInfo) {
             UI::ShowText(dbgX, dbgY, 0.5f, "Unsupported (change handling)");
-            UI::ShowText(dbgX, dbgY + 0.025f, 0.5f, fmt::format("F: {:.2f}", driveBiasFOriginal));
+            UI::ShowText(dbgX, dbgY + 0.025f, 0.5f, std::format("F: {:.2f}", driveBiasFOriginal));
         }
         return;
     }
@@ -149,9 +149,9 @@ void AWD::Update() {
     }
 
     if (g_settings.Debug.DisplayInfo) {
-        UI::ShowText(dbgX, dbgY + 0.000f, 0.25f, fmt::format("T: {:.2f}", driveBiasTransferRatio));
-        UI::ShowText(dbgX, dbgY + 0.025f, 0.25f, fmt::format("F: {:.2f}", driveBiasF));
-        UI::ShowText(dbgX, dbgY + 0.050f, 0.25f, fmt::format("Src: {}", maxTransferInfo.Source));
+        UI::ShowText(dbgX, dbgY + 0.000f, 0.25f, std::format("T: {:.2f}", driveBiasTransferRatio));
+        UI::ShowText(dbgX, dbgY + 0.025f, 0.25f, std::format("F: {:.2f}", driveBiasF));
+        UI::ShowText(dbgX, dbgY + 0.050f, 0.25f, std::format("Src: {}", maxTransferInfo.Source));
     }
 
     // replace value in (current) handling

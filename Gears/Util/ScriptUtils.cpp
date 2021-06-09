@@ -1,8 +1,8 @@
 #include "ScriptUtils.h"
 
 #include "MathExt.h"
-#include "inc/natives.h"
-#include "fmt/format.h"
+#include <inc/natives.h>
+#include <format>
 
 void Controls::SetControlADZ(eControl control, float value, float adz) {
     PAD::_SET_CONTROL_NORMAL(0, control, sgn(value) * adz + (1.0f - adz) * value);

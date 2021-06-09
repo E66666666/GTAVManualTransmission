@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <iostream>
 #include <thread>
-#include <fmt/format.h>
+#include <format>
 #include "../Gears/Input/WheelDirectInput.hpp"
 #include "../Gears/ScriptSettings.hpp"
 #include "../Gears/Input/CarControls.hpp"
@@ -224,7 +224,7 @@ void saveButton(int button, const std::string& confTag, GUID devGUID, const std:
 
 void clearHShifter() {
 	for (uint8_t i = 0; i < g_numGears; ++i) {
-		g_settings.SteeringSaveButton(fmt::format("HPATTERN_{}", i), -1, -1);
+		g_settings.SteeringSaveButton(std::format("HPATTERN_{}", i), -1, -1);
 	}
 	g_settings.Read(&controls);
 }
@@ -233,7 +233,7 @@ void saveHShifter(const std::string& confTag, GUID devGUID, const std::vector<in
 	std::string devName = controls.GetWheel().FindEntryFromGUID(devGUID)->diDeviceInstance.tszInstanceName;
 	auto index = g_settings.SteeringAppendDevice(devGUID, devName);
 	for (uint8_t i = 0; i < buttonArray.size(); ++i) {
-		g_settings.SteeringSaveButton(fmt::format("HPATTERN_{}", i), index, buttonArray[i]);
+		g_settings.SteeringSaveButton(std::format("HPATTERN_{}", i), index, buttonArray[i]);
 	}
 	g_settings.Read(&controls);
 }

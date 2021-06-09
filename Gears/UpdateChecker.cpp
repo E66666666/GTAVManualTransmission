@@ -1,9 +1,10 @@
-#include <curl/curl.h>
-#include <fmt/format.h>
+#include "UpdateChecker.h"
 
 #include "Constants.h"
 #include "Util/Logger.hpp"
-#include "UpdateChecker.h"
+
+#include <curl/curl.h>
+#include <format>
 
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "GDI32.LIB")
@@ -150,8 +151,8 @@ std::string ReplaceAll(std::string str, const std::string& from, const std::stri
 
 bool CheckUpdate(ReleaseInfo& relInfo) {
     logger.Write(INFO, "Checking for updates");
-    std::string url = fmt::format("https://api.github.com/repos/{}/{}/releases/latest", "E66666666", "GTAVManualTransmission");
-    std::string ua = fmt::format("E66666666/MT{}", Constants::DisplayVersion);
+    std::string url = std::format("https://api.github.com/repos/{}/{}/releases/latest", "E66666666", "GTAVManualTransmission");
+    std::string ua = std::format("E66666666/MT{}", Constants::DisplayVersion);
     std::string header = "Accept: application/vnd.github.v3+json";
 
     relInfo = GetLatestReleaseInfo({ url, ua, header });

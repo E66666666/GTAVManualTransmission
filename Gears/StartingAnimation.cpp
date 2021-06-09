@@ -7,7 +7,7 @@
 #include <inc/main.h>
 #include <inc/natives.h>
 
-#include <fmt/format.h>
+#include <format>
 
 extern Vehicle g_playerVehicle;
 extern Ped g_playerPed;

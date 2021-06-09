@@ -1,7 +1,7 @@
 #include "ScriptHUD.h"
-#include <fmt/format.h>
 #include <inc/natives.h>
 #include <numeric>
+#include <format>
 
 #include <menu.h>
 
@@ -285,9 +285,9 @@ void drawGForces() {
     float GForceY = accel.y / 9.8f;
     float GForceZ = accel.z / 9.8f;
 
-    UI::ShowText(locX + 0.100f, locY - 0.075f, 0.5f, fmt::format("LAT: {:.2f} g", GForceX));
-    UI::ShowText(locX + 0.100f, locY - 0.025f, 0.5f, fmt::format("LON: {:.2f} g", GForceY));
-    UI::ShowText(locX + 0.100f, locY + 0.025f, 0.5f, fmt::format("VERT: {:.2f} g", GForceZ));
+    UI::ShowText(locX + 0.100f, locY - 0.075f, 0.5f, std::format("LAT: {:.2f} g", GForceX));
+    UI::ShowText(locX + 0.100f, locY - 0.025f, 0.5f, std::format("LON: {:.2f} g", GForceY));
+    UI::ShowText(locX + 0.100f, locY + 0.025f, 0.5f, std::format("VERT: {:.2f} g", GForceZ));
     
     // 1 div = 1G, entire thing = 2g
     float offX = (szX * 0.5f) * GForceX * 0.5f;
@@ -453,10 +453,10 @@ std::string formatSpeedo(std::string units, float speed, bool showUnit, int hudF
     if (hudFont != 2 && units == "ms") 
         units = "m/s";
 
-    std::string str = fmt::format("{:03.0f}", speed);
+    std::string str = std::format("{:03.0f}", speed);
 
     if (showUnit) 
-        str = fmt::format("{} {}", str, units);
+        str = std::format("{} {}", str, units);
 
     return str;
 }
@@ -595,48 +595,48 @@ void MTHUD::UpdateHUD() {
 
 void drawDebugInfo() {
     if (!g_menu.IsThisOpen()) {
-        UI::ShowText(0.01, 0.250, 0.3, fmt::format("Address: 0x{:X}", reinterpret_cast<uintptr_t>(VExt::GetAddress(g_playerVehicle))));
-        UI::ShowText(0.01, 0.275, 0.3, fmt::format("Mod Enabled:\t\t{}" , g_settings.MTOptions.Enable));
-        UI::ShowText(0.01, 0.300, 0.3, fmt::format("RPM:\t\t\t{:.3f}", g_vehData.mRPM));
-        //UI::ShowText(0.25, 0.300, 0.3, fmt::format("Time:{}", MISC::GET_GAME_TIMER()));
-        UI::ShowText(0.01, 0.325, 0.3, fmt::format("Current Gear:\t\t{}", VExt::GetGearCurr(g_playerVehicle)));
-        UI::ShowText(0.01, 0.350, 0.3, fmt::format("Next Gear:\t\t{}", VExt::GetGearNext(g_playerVehicle)));
-        UI::ShowText(0.01, 0.375, 0.3, fmt::format("Clutch:\t\t\t{:.2f}", VExt::GetClutch(g_playerVehicle)));
-        UI::ShowText(0.01, 0.400, 0.3, fmt::format("Throttle:\t\t\t{:.2f}", VExt::GetThrottle(g_playerVehicle)));
-        UI::ShowText(0.01, 0.425, 0.3, fmt::format("Turbo:\t\t\t{:.2f}", VExt::GetTurbo(g_playerVehicle)));
-        UI::ShowText(0.01, 0.450, 0.3, fmt::format("{}Speedo", g_vehData.mHasSpeedo ? "~g~" : "~r~"));
-        UI::ShowText(0.01, 0.475, 0.3, fmt::format("{}E {}CVT -> {}Clutch",
+        UI::ShowText(0.01, 0.250, 0.3, std::format("Address: 0x{:X}", reinterpret_cast<uintptr_t>(VExt::GetAddress(g_playerVehicle))));
+        UI::ShowText(0.01, 0.275, 0.3, std::format("Mod Enabled:\t\t{}" , g_settings.MTOptions.Enable));
+        UI::ShowText(0.01, 0.300, 0.3, std::format("RPM:\t\t\t{:.3f}", g_vehData.mRPM));
+        //UI::ShowText(0.25, 0.300, 0.3, std::format("Time:{}", MISC::GET_GAME_TIMER()));
+        UI::ShowText(0.01, 0.325, 0.3, std::format("Current Gear:\t\t{}", VExt::GetGearCurr(g_playerVehicle)));
+        UI::ShowText(0.01, 0.350, 0.3, std::format("Next Gear:\t\t{}", VExt::GetGearNext(g_playerVehicle)));
+        UI::ShowText(0.01, 0.375, 0.3, std::format("Clutch:\t\t\t{:.2f}", VExt::GetClutch(g_playerVehicle)));
+        UI::ShowText(0.01, 0.400, 0.3, std::format("Throttle:\t\t\t{:.2f}", VExt::GetThrottle(g_playerVehicle)));
+        UI::ShowText(0.01, 0.425, 0.3, std::format("Turbo:\t\t\t{:.2f}", VExt::GetTurbo(g_playerVehicle)));
+        UI::ShowText(0.01, 0.450, 0.3, std::format("{}Speedo", g_vehData.mHasSpeedo ? "~g~" : "~r~"));
+        UI::ShowText(0.01, 0.475, 0.3, std::format("{}E {}CVT -> {}Clutch",
             g_vehData.mIsElectric ? "~g~" : "~r~", g_vehData.mIsCVT ? "~g~" : "~r~",
             g_vehData.mHasClutch ? "~g~" : "~r~"));
-        UI::ShowText(0.01, 0.500, 0.3, fmt::format("{}ABS",
+        UI::ShowText(0.01, 0.500, 0.3, std::format("{}ABS",
             g_vehData.mHasABS ? "~g~" : "~r~"));
 
-        UI::ShowText(0.01, 0.550, 0.3, fmt::format("{}Shifting", g_gearStates.Shifting ? "~g~" : "~r~"));
-        UI::ShowText(0.01, 0.575, 0.3, fmt::format("Clutch: {}" ,g_gearStates.ClutchVal));
-        UI::ShowText(0.01, 0.600, 0.3, fmt::format("Lock: {}" ,g_gearStates.LockGear));
-        UI::ShowText(0.01, 0.625, 0.3, fmt::format("Next: {}" ,g_gearStates.NextGear));
+        UI::ShowText(0.01, 0.550, 0.3, std::format("{}Shifting", g_gearStates.Shifting ? "~g~" : "~r~"));
+        UI::ShowText(0.01, 0.575, 0.3, std::format("Clutch: {}" ,g_gearStates.ClutchVal));
+        UI::ShowText(0.01, 0.600, 0.3, std::format("Lock: {}" ,g_gearStates.LockGear));
+        UI::ShowText(0.01, 0.625, 0.3, std::format("Next: {}" ,g_gearStates.NextGear));
 
         // Old automatic gearbox
         if (!g_settings().AutoParams.UsingATCU) {
-            UI::ShowText(0.01, 0.650, 0.3, fmt::format("{}Load/upReq: {:.3f}\t/{:.3f}",
+            UI::ShowText(0.01, 0.650, 0.3, std::format("{}Load/upReq: {:.3f}\t/{:.3f}",
                 g_gearStates.Shifting ? "~c~" : "", g_gearStates.EngineLoad, g_gearStates.UpshiftLoad));
-            UI::ShowText(0.01, 0.675, 0.3, fmt::format("{}Load/dnReq: {:.3f}\t/{:.3f}",
+            UI::ShowText(0.01, 0.675, 0.3, std::format("{}Load/dnReq: {:.3f}\t/{:.3f}",
                 g_gearStates.Shifting ? "~c~" : "", g_gearStates.EngineLoad, g_gearStates.DownshiftLoad));
         }
         // Nyconing's ATCU
         else {
-            UI::ShowText(0.01, 0.650, 0.3, fmt::format("Next optimal up-shifting: {:.2f}%", g_gearStates.Atcu.upshiftingIndex * 100.0f));
-            UI::ShowText(0.01, 0.675, 0.3, fmt::format("Next optimal down-shifting: {:.2f}%", g_gearStates.Atcu.downshiftingIndex * 100.0f));
+            UI::ShowText(0.01, 0.650, 0.3, std::format("Next optimal up-shifting: {:.2f}%", g_gearStates.Atcu.upshiftingIndex * 100.0f));
+            UI::ShowText(0.01, 0.675, 0.3, std::format("Next optimal down-shifting: {:.2f}%", g_gearStates.Atcu.downshiftingIndex * 100.0f));
         }
     }
 
-    UI::ShowText(0.85, 0.050, 0.4, fmt::format("Throttle:\t{:.3f}", g_controls.ThrottleVal) , 4);
-    UI::ShowText(0.85, 0.075, 0.4, fmt::format("Brake:\t\t{:.3f}" , g_controls.BrakeVal)    , 4);
-    UI::ShowText(0.85, 0.100, 0.4, fmt::format("Clutch:\t\t{:.3f}", g_controls.ClutchVal)   , 4);
-    UI::ShowText(0.85, 0.125, 0.4, fmt::format("Handb:\t\t{:.3f}" , g_controls.HandbrakeVal), 4);
+    UI::ShowText(0.85, 0.050, 0.4, std::format("Throttle:\t{:.3f}", g_controls.ThrottleVal) , 4);
+    UI::ShowText(0.85, 0.075, 0.4, std::format("Brake:\t\t{:.3f}" , g_controls.BrakeVal)    , 4);
+    UI::ShowText(0.85, 0.100, 0.4, std::format("Clutch:\t\t{:.3f}", g_controls.ClutchVal)   , 4);
+    UI::ShowText(0.85, 0.125, 0.4, std::format("Handb:\t\t{:.3f}" , g_controls.HandbrakeVal), 4);
 
     if (g_settings.Wheel.Options.Enable)
-        UI::ShowText(0.85, 0.150, 0.4, fmt::format("Wheel {} present", g_controls.WheelAvailable() ? "" : " not"), 4);
+        UI::ShowText(0.85, 0.150, 0.4, std::format("Wheel {} present", g_controls.WheelAvailable() ? "" : " not"), 4);
     
 
     if (g_settings.Debug.DisplayGearingInfo) {
@@ -646,7 +646,7 @@ void drawDebugInfo() {
         int i = 0;
         UI::ShowText(0.30f, 0.05f, 0.35f, "Ratios");
         for (auto ratio : ratios) {
-            UI::ShowText(0.30f, 0.10f + 0.025f * i, 0.35f, fmt::format("G{}: {:.3f}", i, ratio));
+            UI::ShowText(0.30f, 0.10f + 0.025f * i, 0.35f, std::format("G{}: {:.3f}", i, ratio));
             i++;
         }
 
@@ -654,7 +654,7 @@ void drawDebugInfo() {
         UI::ShowText(0.45f, 0.05f, 0.35f, "DriveMaxFlatVel");
         for (auto ratio : ratios) {
             float maxSpeed = DriveMaxFlatVel / ratio;
-            UI::ShowText(0.45f, 0.10f + 0.025f * i, 0.35f, fmt::format("G{}: {:.3f}", i, maxSpeed));
+            UI::ShowText(0.45f, 0.10f + 0.025f * i, 0.35f, std::format("G{}: {:.3f}", i, maxSpeed));
             i++;
         }
 
@@ -663,11 +663,11 @@ void drawDebugInfo() {
         float upshiftDuration = 1.0f / (rateUp * g_settings().ShiftOptions.ClutchRateMult);
         float downshiftDuration = 1.0f / (rateDown * g_settings().ShiftOptions.ClutchRateMult);
 
-        UI::ShowText(0.60f, 0.050f, 0.35f, fmt::format("ClutchRate Up: {:.3f}", rateUp));
-        UI::ShowText(0.60f, 0.075f, 0.35f, fmt::format("ClutchRate Dn: {:.3f}", rateDown));
-        UI::ShowText(0.60f, 0.100f, 0.35f, fmt::format("Duration Up: {:.3f}", upshiftDuration));
-        UI::ShowText(0.60f, 0.125f, 0.35f, fmt::format("Duration Dn: {:.3f}", downshiftDuration));
-        UI::ShowText(0.60f, 0.150f, 0.35f, fmt::format("Shift timeout (dn): {:.3f}", downshiftDuration * g_settings().AutoParams.DownshiftTimeoutMult));
+        UI::ShowText(0.60f, 0.050f, 0.35f, std::format("ClutchRate Up: {:.3f}", rateUp));
+        UI::ShowText(0.60f, 0.075f, 0.35f, std::format("ClutchRate Dn: {:.3f}", rateDown));
+        UI::ShowText(0.60f, 0.100f, 0.35f, std::format("Duration Up: {:.3f}", upshiftDuration));
+        UI::ShowText(0.60f, 0.125f, 0.35f, std::format("Duration Dn: {:.3f}", downshiftDuration));
+        UI::ShowText(0.60f, 0.150f, 0.35f, std::format("Shift timeout (dn): {:.3f}", downshiftDuration * g_settings().AutoParams.DownshiftTimeoutMult));
     }
 }
 
@@ -767,11 +767,11 @@ void drawVehicleWheelMaterialInfo() {
         Util::ColorI color = Util::ColorsI::TransparentGray;
 
         UI::ShowText3D(wheelCoords[i], {
-                fmt::format("({}) {}", materialIndex[i], Materials::GetMaterialName(materialIndex[i])),
-                fmt::format("TYRE_GRIP {:.2f}", tyreGrips[i]),
-                fmt::format("WET_GRIP {}", wetGrips[i]),
-                fmt::format("TYRE_DRAG {}", tyreDrags[i]),
-                fmt::format("TOP_SPEED_MULT {}", topSpeedMults[i]),
+                std::format("({}) {}", materialIndex[i], Materials::GetMaterialName(materialIndex[i])),
+                std::format("TYRE_GRIP {:.2f}", tyreGrips[i]),
+                std::format("WET_GRIP {}", wetGrips[i]),
+                std::format("TYRE_DRAG {}", tyreDrags[i]),
+                std::format("TOP_SPEED_MULT {}", topSpeedMults[i]),
             },
             color);
     }
@@ -794,8 +794,8 @@ void drawVehicleWheelInfo() {
     auto wheelLoads = VExt::GetWheelLoads(g_playerVehicle);
     //auto wheelHots = VExt::GetWheelOverheats(g_playerVehicle);
 
-    UI::ShowText(0.60f, 0.200f, 0.25f, fmt::format("Average load: {:.0f} kg", avg(wheelLoads)));
-    UI::ShowText(0.60f, 0.225f, 0.25f, fmt::format("Total load: {:.0f} kg", sum(wheelLoads)));
+    UI::ShowText(0.60f, 0.200f, 0.25f, std::format("Average load: {:.0f} kg", avg(wheelLoads)));
+    UI::ShowText(0.60f, 0.225f, 0.25f, std::format("Total load: {:.0f} kg", sum(wheelLoads)));
 
     for (int i = 0; i < numWheels; i++) {
         Util::ColorI color = Util::ColorsI::TransparentGray;
@@ -824,14 +824,14 @@ void drawVehicleWheelInfo() {
         float tyreAr = 100.0f * ((wheelDims[i].TyreRadius - wheelDims[i].RimRadius) / wheelDims[i].TyreWidth);
         float rimSize = 2.0f * wheelDims[i].RimRadius * 39.3701f; // inches
         UI::ShowText3D(wheelCoords[i], {
-                fmt::format("[{}] {}Powered", i, VExt::IsWheelPowered(g_playerVehicle, i) ? "~g~" : "~r~"),
-                fmt::format("Speed: \t{:.3f}", wheelsSpeed[i]),
-                //fmt::format("Compr: \t{:.3f}", wheelsCompr[i]),
-                //fmt::format("Health: \t{:.3f}", wheelsHealt[i]),
-                fmt::format("Power: \t{:.3f}", wheelsPower[i]),
-                fmt::format("Brake: \t{:.3f}", wheelsBrake[i]),
-                fmt::format("Tyre: {:.0f}/{:.0f}R{:.0f}", wheelDims[i].TyreWidth * 1000.0f, tyreAr, rimSize),
-                fmt::format("{}ABS~w~ | {}TCS~w~ | {}ESC{}",
+                std::format("[{}] {}Powered", i, VExt::IsWheelPowered(g_playerVehicle, i) ? "~g~" : "~r~"),
+                std::format("Speed: \t{:.3f}", wheelsSpeed[i]),
+                //std::format("Compr: \t{:.3f}", wheelsCompr[i]),
+                //std::format("Health: \t{:.3f}", wheelsHealt[i]),
+                std::format("Power: \t{:.3f}", wheelsPower[i]),
+                std::format("Brake: \t{:.3f}", wheelsBrake[i]),
+                std::format("Tyre: {:.0f}/{:.0f}R{:.0f}", wheelDims[i].TyreWidth * 1000.0f, tyreAr, rimSize),
+                std::format("{}ABS~w~ | {}TCS~w~ | {}ESC{}",
                     g_vehData.mWheelsAbs[i] ? "~r~" : "",
                     g_vehData.mWheelsTcs[i] ? "~r~" : "",
                     g_vehData.mWheelsEspO[i] || g_vehData.mWheelsEspU[i] ? "~r~" : "",
@@ -839,10 +839,10 @@ void drawVehicleWheelInfo() {
                         : g_vehData.mWheelsEspO[i] ? "_O"
                         : g_vehData.mWheelsEspU[i] ? "_U" : ""
                     ),
-                fmt::format("DF: {:.3f}", wheelDfs[i]),
-                fmt::format("TVL: {:.3f}", wheelTVLs[i]),
-                fmt::format("Load: {:.0f} kg", wheelLoads[i]),
-                //fmt::format("Heat?: {:.1f}", wheelHots[i]),
+                std::format("DF: {:.3f}", wheelDfs[i]),
+                std::format("TVL: {:.3f}", wheelTVLs[i]),
+                std::format("Load: {:.0f} kg", wheelLoads[i]),
+                //std::format("Heat?: {:.1f}", wheelHots[i]),
             },
             color);
         GRAPHICS::DRAW_LINE(wheelCoords[i].x, wheelCoords[i].y, wheelCoords[i].z,
@@ -859,13 +859,13 @@ void drawLSDInfo() {
     std::string rddcol;
     if (lsdData.RDD > 0.1f) { rddcol = "~r~"; }
     if (lsdData.RDD < -0.1f) { rddcol = "~b~"; }
-    UI::ShowText(0.60f, 0.000f, 0.25f, fmt::format("LF LSD: {:.2f}", lsdData.BrakeLF));
-    UI::ShowText(0.65f, 0.000f, 0.25f, fmt::format("RF LSD: {:.2f}", lsdData.BrakeRF));
-    UI::ShowText(0.70f, 0.000f, 0.25f, fmt::format("{}L-R: {:.2f}", fddcol, lsdData.FDD));
-    UI::ShowText(0.60f, 0.025f, 0.25f, fmt::format("LR LSD: {:.2f}", lsdData.BrakeLR));
-    UI::ShowText(0.65f, 0.025f, 0.25f, fmt::format("RR LSD: {:.2f}", lsdData.BrakeRR));
-    UI::ShowText(0.70f, 0.025f, 0.25f, fmt::format("{}L-R: {:.2f}", rddcol, lsdData.RDD));
-    UI::ShowText(0.60f, 0.050f, 0.25f, fmt::format(
+    UI::ShowText(0.60f, 0.000f, 0.25f, std::format("LF LSD: {:.2f}", lsdData.BrakeLF));
+    UI::ShowText(0.65f, 0.000f, 0.25f, std::format("RF LSD: {:.2f}", lsdData.BrakeRF));
+    UI::ShowText(0.70f, 0.000f, 0.25f, std::format("{}L-R: {:.2f}", fddcol, lsdData.FDD));
+    UI::ShowText(0.60f, 0.025f, 0.25f, std::format("LR LSD: {:.2f}", lsdData.BrakeLR));
+    UI::ShowText(0.65f, 0.025f, 0.25f, std::format("RR LSD: {:.2f}", lsdData.BrakeRR));
+    UI::ShowText(0.70f, 0.025f, 0.25f, std::format("{}L-R: {:.2f}", rddcol, lsdData.RDD));
+    UI::ShowText(0.60f, 0.050f, 0.25f, std::format(
         "{}LSD: {}", lsdData.Use ? "~g~" : "~r~", lsdData.Use ? "Active" : "Idle/Off"));
 }
 

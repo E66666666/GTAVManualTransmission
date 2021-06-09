@@ -6,9 +6,9 @@
 #include "Util/MathExt.h"
 #include "Util/UIUtils.h"
 
-#include <fmt/format.h>
 #include <inc/enums.h>
 #include <inc/natives.h>
+#include <format>
 
 extern CarControls g_controls;
 extern ScriptSettings g_settings;
@@ -40,7 +40,7 @@ bool CruiseControl::GetActive() {
 void CruiseControl::SetActive(bool active) {
     ::active = active;
     cruiseThrottle = 0.0f;
-    UI::Notify(INFO, fmt::format("Cruise control {}", active ? "~g~ON" : "~r~OFF"), true);
+    UI::Notify(INFO, std::format("Cruise control {}", active ? "~g~ON" : "~r~OFF"), true);
 }
 
 bool CruiseControl::GetAdaptiveActive() {

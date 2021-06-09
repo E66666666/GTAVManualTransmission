@@ -109,7 +109,7 @@ void CustomSteering::DrawDebug() {
     float steeringAngleRelY = ENTITY::GET_ENTITY_SPEED(g_playerVehicle) * cos(steeringAngle);
     Vector3 steeringWorld = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(g_playerVehicle, steeringAngleRelX, steeringAngleRelY, 0.0f);
 
-    //showText(0.3f, 0.15f, 0.5f, fmt::format("Angle: {}", rad2deg(steeringAngle)));
+    //showText(0.3f, 0.15f, 0.5f, std::format("Angle: {}", rad2deg(steeringAngle)));
 
     GRAPHICS::DRAW_LINE(positionWorld.x, positionWorld.y, positionWorld.z, travelRelative.x, travelRelative.y, travelRelative.z, 0, 255, 0, 255);
     UI::DrawSphere(travelRelative, 0.25f, { 0, 255, 0, 255 });

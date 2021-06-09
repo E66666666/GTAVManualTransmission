@@ -74,9 +74,6 @@
     <ClCompile Include="Compatibility.cpp">
       <Filter>Lib</Filter>
     </ClCompile>
-    <ClCompile Include="..\thirdparty\fmt\src\format.cc">
-      <Filter>Thirdparty\fmt</Filter>
-    </ClCompile>
     <ClCompile Include="Util\FileVersion.cpp">
       <Filter>Util</Filter>
     </ClCompile>
@@ -595,9 +592,6 @@
     </Filter>
     <Filter Include="Thirdparty\curl">
       <UniqueIdentifier>{86991d65-e172-479c-8c09-1e4747551205}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Thirdparty\fmt">
-      <UniqueIdentifier>{ed736439-0f02-423b-8962-64053e0896cd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Thirdparty\yaml">
       <UniqueIdentifier>{e0f6edc3-ef31-40c5-9dc2-78a926d1ce40}</UniqueIdentifier>

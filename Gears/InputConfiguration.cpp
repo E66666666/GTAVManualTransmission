@@ -18,8 +18,7 @@
 #include <menukeyboard.h>
 #include <inc/natives.h>
 
-#include <fmt/format.h>
-
+#include <format>
 #include <string>
 
 using VExt = VehicleExtensions;
@@ -68,7 +67,7 @@ void saveHShifter(const std::string& confTag, GUID devGUID, const std::vector<in
     auto index = g_settings.SteeringAppendDevice(devGUID, devName);
 
     for (uint8_t i = 0; i < buttonArray.size(); ++i) {
-        g_settings.SteeringSaveButton(fmt::format("HPATTERN_{}", i), index, buttonArray[i]);
+        g_settings.SteeringSaveButton(std::format("HPATTERN_{}", i), index, buttonArray[i]);
     }
 
     g_settings.Read(&g_controls);
@@ -78,7 +77,7 @@ void clearAxis(const std::string& confTag) {
     saveAllSettings();
     g_settings.SteeringSaveAxis(confTag, -1, "", 0, 0);
     g_settings.Read(&g_controls);
-    UI::Notify(WARN, fmt::format("Cleared axis {}", confTag));
+    UI::Notify(WARN, std::format("Cleared axis {}", confTag));
     initWheel();
 }
 
@@ -93,17 +92,17 @@ void clearWheelToKey() {
 
     int button;
     if (str2int(button, result.c_str(), 10) != STR2INT_SUCCESS) {
-        UI::Notify(WARN, fmt::format("Invalid input: {} is not a valid number!", result));
+        UI::Notify(WARN, std::format("Invalid input: {} is not a valid number!", result));
         return;
     }
     bool found = g_settings.SteeringClearWheelToKey(button);
     if (found) {
         saveAllSettings();
-        UI::Notify(WARN, fmt::format("Removed button {}", result));
+        UI::Notify(WARN, std::format("Removed button {}", result));
         g_settings.Read(&g_controls);
     }
     else {
-        UI::Notify(WARN, fmt::format("Button {} not found.", result));
+        UI::Notify(WARN, std::format("Button {} not found.", result));
     }
 }
 
@@ -111,13 +110,13 @@ void clearButton(const std::string& confTag) {
     saveAllSettings();
     g_settings.SteeringSaveButton(confTag, -1, -1);
     g_settings.Read(&g_controls);
-    UI::Notify(WARN, fmt::format("Cleared button {}", confTag));
+    UI::Notify(WARN, std::format("Cleared button {}", confTag));
 }
 
 void clearHShifter() {
     saveAllSettings();
     for (uint8_t i = 0; i < VExt::GearsAvailable(); ++i) {
-        g_settings.SteeringSaveButton(fmt::format("HPATTERN_{}", i), -1, -1);
+        g_settings.SteeringSaveButton(std::format("HPATTERN_{}", i), -1, -1);
     }
     g_settings.Read(&g_controls);
     UI::Notify(WARN, "Cleared H-pattern shifter");
@@ -138,42 +137,42 @@ void saveKeyboardKey(const std::string& confTag, const std::string& key) {
     saveAllSettings();
     g_settings.KeyboardSaveKey(confTag, key);
     g_settings.Read(&g_controls);
-    UI::Notify(WARN, fmt::format("Saved key {}: {}.", confTag, key));
+    UI::Notify(WARN, std::format("Saved key {}: {}.", confTag, key));
 }
 
 void saveControllerButton(const std::string& confTag, const std::string& button) {
     saveAllSettings();
     g_settings.ControllerSaveButton(confTag, button);
     g_settings.Read(&g_controls);
-    UI::Notify(WARN, fmt::format("Saved button {}: {}.", confTag, button));
+    UI::Notify(WARN, std::format("Saved button {}: {}.", confTag, button));
 }
 
 void saveLControllerButton(const std::string& confTag, int button) {
     saveAllSettings();
     g_settings.LControllerSaveButton(confTag, button);
     g_settings.Read(&g_controls);
-    UI::Notify(WARN, fmt::format("Saved button {}: {}", confTag, button));
+    UI::Notify(WARN, std::format("Saved button {}: {}", confTag, button));
 }
 
 void clearKeyboardKey(const std::string& confTag) {
     saveAllSettings();
     g_settings.KeyboardSaveKey(confTag, "UNKNOWN");
     g_settings.Read(&g_controls);
-    UI::Notify(WARN, fmt::format("Cleared key {}", confTag));
+    UI::Notify(WARN, std::format("Cleared key {}", confTag));
 }
 
 void clearControllerButton(const std::string& confTag) {
     saveAllSettings();
     g_settings.ControllerSaveButton(confTag, "UNKNOWN");
     g_settings.Read(&g_controls);
-    UI::Notify(WARN, fmt::format("Cleared button {}", confTag));
+    UI::Notify(WARN, std::format("Cleared button {}", confTag));
 }
 
 void clearLControllerButton(const std::string& confTag) {
     saveAllSettings();
     g_settings.LControllerSaveButton(confTag, -1);
     g_settings.Read(&g_controls);
-    UI::Notify(WARN, fmt::format("Cleared button {}", confTag));
+    UI::Notify(WARN, std::format("Cleared button {}", confTag));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -197,9 +196,9 @@ bool configAxis(const std::string& confTag) {
         additionalInfo = "Fully pull and set back handbrake to register axis.";
     }
     else {
-        additionalInfo = fmt::format("Fully press and release the {} pedal to register axis.", confTag);
+        additionalInfo = std::format("Fully press and release the {} pedal to register axis.", confTag);
     }
-    additionalInfo += fmt::format(" Press [{}] to exit.", escapeKey);
+    additionalInfo += std::format(" Press [{}] to exit.", escapeKey);
 
     g_controls.UpdateValues(CarControls::InputDevices::Wheel, true);
     // Save current state
@@ -294,7 +293,7 @@ bool configAxis(const std::string& confTag) {
 }
 
 bool configWheelToKey() {
-    std::string additionalInfo = fmt::format("Press a button to configure. Press [{}] to exit", escapeKey);
+    std::string additionalInfo = std::format("Press a button to configure. Press [{}] to exit", escapeKey);
 
     g_controls.UpdateValues(CarControls::InputDevices::Wheel, true);
 
@@ -333,7 +332,7 @@ bool configWheelToKey() {
                 }
             }
             if (progress == 1) {
-                additionalInfo = fmt::format("Press a keyboard key to configure. Press [{}] to exit", escapeKey);
+                additionalInfo = std::format("Press a keyboard key to configure. Press [{}] to exit", escapeKey);
             }
         }
         if (progress == 1) {
@@ -363,7 +362,7 @@ bool configWheelToKey() {
 }
 
 bool configButton(const std::string& confTag) {
-    std::string additionalInfo = fmt::format("Press a button to set {}. Press [{}] to exit.", confTag, escapeKey);
+    std::string additionalInfo = std::format("Press a button to set {}. Press [{}] to exit.", confTag, escapeKey);
 
     g_controls.UpdateValues(CarControls::InputDevices::Wheel, true);
 
@@ -395,7 +394,7 @@ bool configButton(const std::string& confTag) {
 
 bool configHPattern() {
     std::string confTag = "SHIFTER";
-    std::string additionalInfo = fmt::format("Press [{}] to skip gear. Press [{}] to exit.", skipKey, escapeKey);
+    std::string additionalInfo = std::format("Press [{}] to skip gear. Press [{}] to exit.", skipKey, escapeKey);
 
     GUID devGUID = {};
     std::vector<int> buttonArray(VExt::GearsAvailable());
@@ -440,9 +439,9 @@ bool configHPattern() {
             case 1: gearDisplay = "1st gear"; break;
             case 2: gearDisplay = "2nd gear"; break;
             case 3: gearDisplay = "3rd gear"; break;
-            default: gearDisplay = fmt::format("{}th gear", progress); break;
+            default: gearDisplay = std::format("{}th gear", progress); break;
         }
-        UI::ShowHelpText(fmt::format("Shift into {}. {}", gearDisplay, additionalInfo));
+        UI::ShowHelpText(std::format("Shift into {}. {}", gearDisplay, additionalInfo));
         WAIT(0);
     }
     saveHShifter(confTag, devGUID, buttonArray);
@@ -450,7 +449,7 @@ bool configHPattern() {
 }
 
 bool configASelect() {
-    std::string additionalInfo = fmt::format("Press [{}] to exit.", escapeKey);
+    std::string additionalInfo = std::format("Press [{}] to exit.", escapeKey);
     GUID devGUID = {};
     std::array<int, 4> buttonArray{ -1, -1, -1, -1 };
     int progress = 0;
@@ -481,7 +480,7 @@ bool configASelect() {
                             case 3: autoPos = "D"; break;
                             default: autoPos = "?"; break;
                         }
-                        saveButton(fmt::format("AUTO_{}", autoPos), devGUID, i);
+                        saveButton(std::format("AUTO_{}", autoPos), devGUID, i);
                         progress++;
                     }
                 }
@@ -500,15 +499,15 @@ bool configASelect() {
         }
 
         if (progress == 2) {
-            std::string additionalInfoN = fmt::format("Press {} to skip Neutral assignment. No input becomes Neutral. {}", skipKey, additionalInfo);
+            std::string additionalInfoN = std::format("Press {} to skip Neutral assignment. No input becomes Neutral. {}", skipKey, additionalInfo);
             if (IsKeyJustUp(str2key(skipKey))) {
                 progress++;
                 saveButton("AUTO_N", devGUID, -1);
             }
-            UI::ShowHelpText(fmt::format("Shift into {}. {}", gearDisplay, additionalInfoN));
+            UI::ShowHelpText(std::format("Shift into {}. {}", gearDisplay, additionalInfoN));
         }
         else {
-            UI::ShowHelpText(fmt::format("Shift into {}. {}", gearDisplay, additionalInfo));
+            UI::ShowHelpText(std::format("Shift into {}. {}", gearDisplay, additionalInfo));
         }
         WAIT(0);
     }
@@ -523,7 +522,7 @@ bool isMenuControl(int control) {
 }
 
 bool configKeyboardKey(const std::string& confTag) {
-    std::string additionalInfo = fmt::format("Press [{}] to exit.", escapeKey);
+    std::string additionalInfo = std::format("Press [{}] to exit.", escapeKey);
     while (true) {
         if (IsKeyJustUp(str2key(escapeKey))) {
             return false;
@@ -552,14 +551,14 @@ bool configKeyboardKey(const std::string& confTag) {
             }
         }
 
-        UI::ShowHelpText(fmt::format("Press {}. Menu keys can't be chosen. {}", confTag, additionalInfo));
+        UI::ShowHelpText(std::format("Press {}. Menu keys can't be chosen. {}", confTag, additionalInfo));
         WAIT(0);
     }
 }
 
 // Controller
 bool configControllerButton(const std::string& confTag) {
-    std::string additionalInfo = fmt::format("Press [{}] to exit.", escapeKey);
+    std::string additionalInfo = std::format("Press [{}] to exit.", escapeKey);
     XInputController& controller = g_controls.GetController();
 
     while (true) {
@@ -574,13 +573,13 @@ bool configControllerButton(const std::string& confTag) {
                 return true;
             }
         }
-        UI::ShowHelpText(fmt::format("Press {}. {}", confTag, additionalInfo));
+        UI::ShowHelpText(std::format("Press {}. {}", confTag, additionalInfo));
         WAIT(0);
     }
 }
 
 bool configLControllerButton(const std::string& confTag) {
-    std::string additionalInfo = fmt::format("Press [{}] to exit", escapeKey);
+    std::string additionalInfo = std::format("Press [{}] to exit", escapeKey);
 
     while (true) {
         if (IsKeyJustUp(str2key(escapeKey))) {
@@ -594,7 +593,7 @@ bool configLControllerButton(const std::string& confTag) {
             }
         }
 
-        UI::ShowHelpText(fmt::format("Press {}. {}", confTag, additionalInfo));
+        UI::ShowHelpText(std::format("Press {}. {}", confTag, additionalInfo));
         WAIT(0);
     }
 }

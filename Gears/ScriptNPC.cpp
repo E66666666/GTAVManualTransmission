@@ -16,7 +16,7 @@
 #include "Util/ScriptUtils.h"
 
 #include <inc/natives.h>
-#include <fmt/format.h>
+#include <format>
 #include <set>
 
 using VExt = VehicleExtensions;
@@ -107,19 +107,19 @@ void showNPCInfo(NPCVehicle _npcVehicle) {
             }
 
             std::vector<std::pair<std::string, Util::ColorI>> dbgLines = {
-                    { fmt::format("Throttle: {:.2f} ({:.2f})", throttle, gearStates.ThrottleHang), thColor },
-                    { fmt::format("Brake: {:.2f}", brake), brColor },
-                    { fmt::format("Steer: {:.2f}", VExt::GetSteeringAngle(npcVehicle)), fgColor },
-                    { fmt::format("[{}/{}]: {:.2f}", VExt::GetGearCurr(npcVehicle), VExt::GetTopGear(npcVehicle), rpm), rpmColor },
-                    { fmt::format("Load: {:.2f}", load), fgColor },
+                    { std::format("Throttle: {:.2f} ({:.2f})", throttle, gearStates.ThrottleHang), thColor },
+                    { std::format("Brake: {:.2f}", brake), brColor },
+                    { std::format("Steer: {:.2f}", VExt::GetSteeringAngle(npcVehicle)), fgColor },
+                    { std::format("[{}/{}]: {:.2f}", VExt::GetGearCurr(npcVehicle), VExt::GetTopGear(npcVehicle), rpm), rpmColor },
+                    { std::format("Load: {:.2f}", load), fgColor },
             };
 
             if (g_settings.Debug.DisplayGearingInfo) {
-                dbgLines.emplace_back(fmt::format("{:.2f}", fmt::join(VExt::GetGearRatios(npcVehicle), " | ")), fgColor);
+                dbgLines.emplace_back(std::format("{:.2f}", (VExt::GetGearRatios(npcVehicle), " | ")), fgColor);
             }
 
             if (VEHICLE::IS_TOGGLE_MOD_ON(npcVehicle, VehicleToggleModTurbo)) {
-                dbgLines.emplace_back(fmt::format("Turbo: {:.2f}", VExt::GetTurbo(npcVehicle)), fgColor);
+                dbgLines.emplace_back(std::format("Turbo: {:.2f}", VExt::GetTurbo(npcVehicle)), fgColor);
             }
 
             UI::ShowText3DColors(targetPos, dbgLines, bgColor);

@@ -37,13 +37,12 @@
 #include <inc/main.h>
 #include <inc/natives.h>
 
-#include <fmt/format.h>
-
 #include <Windows.h>
 #include <shellapi.h>
 #include <string>
 #include <mutex>
 #include <filesystem>
+#include <format>
 
 using VExt = VehicleExtensions;
 
@@ -120,7 +119,7 @@ namespace {
     bool getKbEntry(float& val) {
         UI::Notify(INFO, "Enter value");
         MISC::DISPLAY_ONSCREEN_KEYBOARD(LOCALIZATION::GET_CURRENT_LANGUAGE() == 0, "FMMC_KEY_TIP8", "",
-            fmt::format("{:f}", val).c_str(), "", "", "", 64);
+            std::format("{:f}", val).c_str(), "", "", "", 64);
         while (MISC::UPDATE_ONSCREEN_KEYBOARD() == 0) {
             WAIT(0);
         }
@@ -190,7 +189,7 @@ namespace {
         std::string cfgName = "Base";
         if (g_settings.ConfigActive())
             cfgName = g_settings().Name;
-        return fmt::format("CFG: [{}]", cfgName);
+        return std::format("CFG: [{}]", cfgName);
     }
 }
 
@@ -214,7 +213,7 @@ void onMenuClose() {
 
 void update_mainmenu() {
     g_menu.Title("Manual Transmission");
-    g_menu.Subtitle(fmt::format("~b~{}{}", Constants::DisplayVersion, GIT_DIFF));
+    g_menu.Subtitle(std::format("~b~{}{}", Constants::DisplayVersion, GIT_DIFF));
 
     if (g_settings.Error()) {
         g_menu.Option("Settings load/save error", NativeMenu::solidRed,
@@ -246,8 +245,8 @@ void update_mainmenu() {
                     NativeMenu::split(g_releaseInfo.Body, '\n');
 
                 std::vector<std::string> extra = {
-                    fmt::format("New version: {}", g_releaseInfo.Version.c_str()),
-                    fmt::format("Release date: {}", g_releaseInfo.TimestampPublished.c_str()),
+                    std::format("New version: {}", g_releaseInfo.Version.c_str()),
+                    std::format("Release date: {}", g_releaseInfo.TimestampPublished.c_str()),
                     "Changelog:"
                 };
 
@@ -283,7 +282,7 @@ void update_mainmenu() {
     };
 
     if (g_settings.ConfigActive()) {
-        detailsTemp.push_back(fmt::format("CFG: [{}]", g_settings().Name));
+        detailsTemp.push_back(std::format("CFG: [{}]", g_settings().Name));
     }
 
     g_menu.StringArray("Gearbox", gearboxModes, tempShiftMode,
@@ -368,7 +367,7 @@ void update_featuresmenu() {
     g_menu.Title("Features");
 
     if (g_settings.ConfigActive())
-        g_menu.Subtitle(fmt::format("CFG: [{} (Partial)]", g_settings().Name));
+        g_menu.Subtitle(std::format("CFG: [{} (Partial)]", g_settings().Name));
     else
         g_menu.Subtitle(MenuSubtitleConfig());
 
@@ -454,7 +453,7 @@ void update_shiftingoptionsmenu() {
     g_menu.FloatOption("Shifting RPM tolerance", g_settings().ShiftOptions.RPMTolerance, 0.0f, 1.0f, 0.05f,
         { "RPM mismatch tolerance on shifts",
             "Only applies to H-pattern with \"Clutch Shift\" enabled.",
-            fmt::format("Clutch Shift (H) is {}abled.", g_settings().MTOptions.ClutchShiftH ? "~g~en" : "~r~dis")
+            std::format("Clutch Shift (H) is {}abled.", g_settings().MTOptions.ClutchShiftH ? "~g~en" : "~r~dis")
         });
 }
 
@@ -491,7 +490,7 @@ void update_finetuneautooptionsmenu() {
 std::vector<std::string> formatVehicleConfig(const VehicleConfig& config) {
     std::string modelNames;
     for (auto it = config.ModelNames.begin(); it != config.ModelNames.end(); ++it) {
-        modelNames += fmt::format("[{}]", *it);
+        modelNames += std::format("[{}]", *it);
         if (std::next(it) != config.ModelNames.end())
             modelNames += " ";
     }
@@ -500,7 +499,7 @@ std::vector<std::string> formatVehicleConfig(const VehicleConfig& config) {
 
     std::string plates;
     for (auto it = config.Plates.begin(); it != config.Plates.end(); ++it) {
-        plates += fmt::format("[{}]", *it);
+        plates += std::format("[{}]", *it);
         if (std::next(it) != config.Plates.end())
             plates += " ";
     }
@@ -525,25 +524,26 @@ std::vector<std::string> formatVehicleConfig(const VehicleConfig& config) {
     bool lsdEn = config.DriveAssists.LSD.Enable;
     bool lcEn = config.DriveAssists.LaunchControl.Enable;
 
+    float softLockValue = config.Steering.Wheel.SoftLock;
     std::vector<std::string> extras{
-        fmt::format("{}", config.Description),
+        std::format("{}", config.Description),
         "Compatible cars:",
-        fmt::format("\tModels: {}", modelNames),
-        fmt::format("\tPlates: {}", plates),
+        std::format("\tModels: {}", modelNames),
+        std::format("\tPlates: {}", plates),
         "Shifting options:",
-        fmt::format("\tShift mode: {}", gearboxModes[shiftMode]),
-        fmt::format("\tClutch creep: {}", clutchCreep),
-        fmt::format("\tSequential assist: {}", shiftAssist),
+        std::format("\tShift mode: {}", gearboxModes[shiftMode]),
+        std::format("\tClutch creep: {}", clutchCreep),
+        std::format("\tSequential assist: {}", shiftAssist),
         "Driving assists:",
-        fmt::format("\t{}ABS {}TCS {}ESP",
+        std::format("\t{}ABS {}TCS {}ESP",
             absEn ? "~g~" : "~r~",
             tcsEn ? "~g~" : "~r~",
             espEn ? "~g~" : "~r~"),
-        fmt::format("\t{}LSD {}Launch",
+        std::format("\t{}LSD {}Launch",
             lsdEn ? "~g~" : "~r~",
             lcEn ? "~g~" : "~r~"),
         "Steering wheel:",
-        fmt::format("\tSoft lock: {:.0f}", config.Steering.Wheel.SoftLock)
+        std::format("\tSoft lock: {:.0f}", softLockValue)
     };
     return extras;
 }
@@ -581,16 +581,16 @@ void saveVehicleConfig() {
         for (const auto& p : std::filesystem::directory_iterator(vehConfigDir)) {
             if (p.path().stem() == saveFile) {
                 duplicate = true;
-                saveFile = fmt::format("{}_{:02d}", fileName.c_str(), saveFileSuffix++);
+                saveFile = std::format("{}_{:02d}", fileName.c_str(), saveFileSuffix++);
             }
         }
     } while (duplicate);
 
     if (saveFile != fileName) {
-        UI::Notify(WARN, fmt::format("Duplicate filename(s) detected. Actual filename: {}", saveFile.c_str()));
+        UI::Notify(WARN, std::format("Duplicate filename(s) detected. Actual filename: {}", saveFile.c_str()));
     }
 
-    std::string finalFile = fmt::format("{}\\{}.ini", vehConfigDir, saveFile);
+    std::string finalFile = std::format("{}\\{}.ini", vehConfigDir, saveFile);
 
     UI::ShowHelpText("Enter model name. Multiple models can be entered, separated by a space.");
 
@@ -607,7 +607,7 @@ void saveVehicleConfig() {
     config.ModelNames = StrUtil::split(userModels, ' ');
     config.SaveSettings();
     loadConfigs();
-    UI::Notify(INFO, fmt::format("Stored new configuration as {}", finalFile.c_str()));
+    UI::Notify(INFO, std::format("Stored new configuration as {}", finalFile.c_str()));
 }
 
 void update_vehconfigmenu() {
@@ -628,7 +628,7 @@ void update_vehconfigmenu() {
 
     if (g_settings.ConfigActive()) {
         bool sel = false;
-        g_menu.OptionPlus(fmt::format("Active configuration: [{}]", g_settings().Name), {}, &sel, nullptr, nullptr, "",
+        g_menu.OptionPlus(std::format("Active configuration: [{}]", g_settings().Name), {}, &sel, nullptr, nullptr, "",
             { "Currently using this configuration. Any changes made are saved into the current configuration.",
               "When multiple configurations work with the same model, the configuration that comes first "
               "alphabetically is used." });
@@ -748,14 +748,14 @@ void update_controllermenu() {
             float ljVal = static_cast<float>(g_settings.Controller.DeadzoneLeftThumb);
             if (g_menu.FloatOptionCb("Deadzone left thumb", ljVal, 0.0f, 32767.0f, 1.0f, getKbEntry,
                 { "Deadzone for left thumb joystick. Works for XInput mode only!",
-                  fmt::format("Default value: {}", XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) })) {
+                  std::format("Default value: {}", XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) })) {
                 g_settings.Controller.DeadzoneLeftThumb = static_cast<int>(ljVal);
             }
 
             float rjVal = static_cast<float>(g_settings.Controller.DeadzoneRightThumb);
             if (g_menu.FloatOptionCb("Deadzone right thumb", rjVal, 0.0f, 32767.0f, 1.0f, getKbEntry,
                 { "Deadzone for right thumb joystick. Works for XInput mode only!",
-                  fmt::format("Default value: {}", XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) })) {
+                  std::format("Default value: {}", XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) })) {
                 g_settings.Controller.DeadzoneRightThumb = static_cast<int>(rjVal);
             }
         }
@@ -796,13 +796,14 @@ void update_controllerbindingsnativemenu() {
 
     for (const auto& input : g_controls.LegacyControls) {
         controllerInfo.back() = input.Description;
-        controllerInfo.push_back(fmt::format("Assigned to {} ({})", NativeController::GetControlName(input.Control), input.Control));
+        auto controlName = NativeController::GetControlName(input.Control);
+        controllerInfo.push_back(std::format("Assigned to {} ({})", controlName, static_cast<int>(input.Control)));
 
-        if (g_menu.OptionPlus(fmt::format("Assign {}", input.Name), controllerInfo, nullptr, std::bind(clearLControllerButton, input.ConfigTag), nullptr, "Current setting")) {
+        if (g_menu.OptionPlus(std::format("Assign {}", input.Name), controllerInfo, nullptr, std::bind(clearLControllerButton, input.ConfigTag), nullptr, "Current setting")) {
             WAIT(500);
             bool result = configLControllerButton(input.ConfigTag);
             if (!result)
-                UI::Notify(WARN, fmt::format("Cancelled {} assignment", input.Name));
+                UI::Notify(WARN, std::format("Cancelled {} assignment", input.Name));
             WAIT(500);
         }
         controllerInfo.pop_back();
@@ -843,12 +844,12 @@ void update_controllerbindingsxinputmenu() {
 
     for (const auto& input : g_controls.ControlXbox) {
         controllerInfo.back() = input.Description;
-        controllerInfo.push_back(fmt::format("Assigned to {}", input.Control));
-        if (g_menu.OptionPlus(fmt::format("Assign {}", input.Name), controllerInfo, nullptr, std::bind(clearControllerButton, input.ConfigTag), nullptr, "Current setting")) {
+        controllerInfo.push_back(std::format("Assigned to {}", input.Control));
+        if (g_menu.OptionPlus(std::format("Assign {}", input.Name), controllerInfo, nullptr, std::bind(clearControllerButton, input.ConfigTag), nullptr, "Current setting")) {
             WAIT(500);
             bool result = configControllerButton(input.ConfigTag);
             if (!result)
-                UI::Notify(WARN, fmt::format("Cancelled {} assignment", input.Name));
+                UI::Notify(WARN, std::format("Cancelled {} assignment", input.Name));
             WAIT(500);
         }
         controllerInfo.pop_back();
@@ -874,13 +875,13 @@ void update_keyboardmenu() {
         keyboardInfo.emplace_back("None");
 
     for (const auto& input : g_controls.KBControl) {
-        keyboardInfo.push_back(fmt::format("Assigned to {}", key2str(input.Control)));
-        if (g_menu.OptionPlus(fmt::format("Assign {}", input.Name), keyboardInfo, nullptr, std::bind(clearKeyboardKey, input.ConfigTag), nullptr, "Current setting")) {
+        keyboardInfo.push_back(std::format("Assigned to {}", key2str(input.Control)));
+        if (g_menu.OptionPlus(std::format("Assign {}", input.Name), keyboardInfo, nullptr, std::bind(clearKeyboardKey, input.ConfigTag), nullptr, "Current setting")) {
             WAIT(500);
             bool result = configKeyboardKey(input.ConfigTag);
             UI::Notify(WARN, result ?
-                fmt::format("[{}] saved", input.Name) :
-                fmt::format("[{}] cancelled", input.Name));
+                std::format("[{}] saved", input.Name) :
+                std::format("[{}] cancelled", input.Name));
             WAIT(500);
         }
         keyboardInfo.pop_back();
@@ -943,7 +944,7 @@ void update_wheelmenu() {
     for (uint8_t gear = 1; gear < VExt::GearsAvailable(); ++gear) {
         // H1 == 1
         if (g_controls.ButtonIn(static_cast<CarControls::WheelControlType>(gear))) 
-            hpatInfo.emplace_back(fmt::format("Gear {}", gear));
+            hpatInfo.emplace_back(std::format("Gear {}", gear));
     }
 
     if (g_menu.OptionPlus("H-pattern shifter setup", hpatInfo, nullptr, std::bind(clearHShifter), nullptr, "Input values",
@@ -1011,11 +1012,11 @@ std::vector<std::string> showGammaCurve(const std::string& axis, const float inp
     if (gamma >= 5.0f - 0.01f) rarr = "";
     if (gamma <= 0.1f + 0.01f) larr = "";
 
-    std::string printVar = fmt::format("{:.{}f}", gamma, 2);
+    std::string printVar = std::format("{:.{}f}", gamma, 2);
 
     std::vector<std::string> info{
-        fmt::format("{} gamma:", axis),
-        fmt::format("{}{}{}", larr, printVar, rarr)
+        std::format("{} gamma:", axis),
+        std::format("{}{}{}", larr, printVar, rarr)
     };
 
     const int max_samples = 100;
@@ -1064,11 +1065,11 @@ void update_axesmenu() {
     g_controls.UpdateValues(CarControls::Wheel, true);
     std::vector<std::string> info = {
         "Press RIGHT to clear this axis" ,
-        fmt::format("Steer:\t\t{:.3f}", g_controls.SteerVal),
-        fmt::format("Throttle:\t\t{:.3f}", g_controls.ThrottleVal),
-        fmt::format("Brake:\t\t{:.3f}", g_controls.BrakeVal),
-        fmt::format("Clutch:\t\t{:.3f}", g_controls.ClutchVal),
-        fmt::format("Handbrake:\t{:.3f}", g_controls.HandbrakeVal),
+        std::format("Steer:\t\t{:.3f}", g_controls.SteerVal),
+        std::format("Throttle:\t\t{:.3f}", g_controls.ThrottleVal),
+        std::format("Brake:\t\t{:.3f}", g_controls.BrakeVal),
+        std::format("Clutch:\t\t{:.3f}", g_controls.ClutchVal),
+        std::format("Handbrake:\t{:.3f}", g_controls.HandbrakeVal),
     };
 
     for (const auto& input : g_controls.WheelAxes) {
@@ -1080,7 +1081,7 @@ void update_axesmenu() {
             continue;
 
         if (g_menu.OptionPlus(
-            fmt::format("Configure {}", input.Name),
+            std::format("Configure {}", input.Name),
             info, 
             nullptr,
             [&input] { return clearAxis(input.ConfigTag); }, 
@@ -1088,8 +1089,8 @@ void update_axesmenu() {
             "Input values")) {
             bool result = configAxis(input.ConfigTag);
             UI::Notify(WARN, result ? 
-                fmt::format("[{}] saved", input.Name) : 
-                fmt::format("[{}] cancelled", input.Name));
+                std::format("[{}] saved", input.Name) : 
+                std::format("[{}] cancelled", input.Name));
             if (result)
                 initWheel();
         }
@@ -1175,7 +1176,7 @@ void update_forcefeedbackmenu() {
 
     g_menu.FloatOption("Self aligning torque speed cap", g_settings.Wheel.FFB.MaxSpeed, 10.0f, 1000.0f, 1.0f,
         { "Speed where FFB stops increasing. Helpful against too strong FFB at extreme speeds.",
-          fmt::format("{} kph / {} mph", g_settings.Wheel.FFB.MaxSpeed * 3.6f, g_settings.Wheel.FFB.MaxSpeed * 2.23694f)});
+          std::format("{} kph / {} mph", g_settings.Wheel.FFB.MaxSpeed * 3.6f, g_settings.Wheel.FFB.MaxSpeed * 2.23694f)});
 
     g_menu.FloatOption("Understeer loss", g_settings.Wheel.FFB.SATUndersteerMult, 0.0f, 10.0f, 0.1f,
         { "How much the force feedback is reduced when understeering." });
@@ -1227,7 +1228,7 @@ void update_forcefeedbackmenu() {
 
             g_controls.PlayFFBDynamics(g_settings.Wheel.FFB.AntiDeadForce, 0);
             
-            UI::ShowHelpText(fmt::format("Press [Left] and [Right] to decrease and increase force feedback anti-deadzone. "
+            UI::ShowHelpText(std::format("Press [Left] and [Right] to decrease and increase force feedback anti-deadzone. "
                 "Use the highest value before your wheel starts moving. Currently [{}]. Press [{}] to exit.", g_settings.Wheel.FFB.AntiDeadForce, escapeKey));
             WAIT(0);
         }
@@ -1241,7 +1242,7 @@ void update_buttonsmenu() {
     std::vector<std::string> wheelToKeyInfo = {
         "Active wheel-to-key options:",
         "Press RIGHT to clear all keys bound to button",
-        fmt::format("Device: {}", g_settings.GUIDToDeviceIndex(g_controls.WheelToKeyGUID))
+        std::format("Device: {}", g_settings.GUIDToDeviceIndex(g_controls.WheelToKeyGUID))
     };
 
     for (int i = 0; i < MAX_RGBBUTTONS; i++) {
@@ -1249,9 +1250,9 @@ void update_buttonsmenu() {
             continue;
         
         for (const auto& keyval : g_controls.WheelToKey[i]) {
-            wheelToKeyInfo.push_back(fmt::format("{} = {}", i, key2str(keyval)));
+            wheelToKeyInfo.push_back(std::format("{} = {}", i, key2str(keyval)));
             if (g_controls.GetWheel().IsButtonPressed(i, g_controls.WheelToKeyGUID)) {
-                wheelToKeyInfo.back() = fmt::format("{} (Pressed)", wheelToKeyInfo.back());
+                wheelToKeyInfo.back() = std::format("{} (Pressed)", wheelToKeyInfo.back());
             }
         }
     }
@@ -1261,9 +1262,9 @@ void update_buttonsmenu() {
             continue;
         auto i = w2kBindingPov.first;
         for (const auto& keyval : w2kBindingPov.second) {
-            wheelToKeyInfo.push_back(fmt::format("{} = {}", i, key2str(keyval)));
+            wheelToKeyInfo.push_back(std::format("{} = {}", i, key2str(keyval)));
             if (g_controls.GetWheel().IsButtonPressed(i, g_controls.WheelToKeyGUID)) {
-                wheelToKeyInfo.back() = fmt::format("{} (Pressed)", wheelToKeyInfo.back());
+                wheelToKeyInfo.back() = std::format("{} (Pressed)", wheelToKeyInfo.back());
             }
         }
     }
@@ -1299,9 +1300,9 @@ void update_buttonsmenu() {
             input.ConfigTag.empty())
             continue;
 
-        buttonInfo.push_back(fmt::format("Assigned to {}", input.Control));
+        buttonInfo.push_back(std::format("Assigned to {}", input.Control));
         if (g_menu.OptionPlus(
-            fmt::format("Assign [{}]", input.Name),
+            std::format("Assign [{}]", input.Name),
             buttonInfo,
             nullptr,
             [&input] { return clearButton(input.ConfigTag); },
@@ -1309,8 +1310,8 @@ void update_buttonsmenu() {
             "Current inputs")) {
             bool result = configButton(input.ConfigTag);
             UI::Notify(WARN, result ?
-                fmt::format("[{}] saved", input.Name) :
-                fmt::format("[{}] cancelled", input.Name));
+                std::format("[{}] saved", input.Name) :
+                std::format("[{}] cancelled", input.Name));
             if (result)
                 initWheel();
         }
@@ -1699,12 +1700,12 @@ void update_lsdsettingsmenu() {
             if (lsdData.RDD > 0.1f) { rddcol = "~r~"; }
             if (lsdData.RDD < -0.1f) { rddcol = "~b~"; }
 
-            extra.push_back(fmt::format("{}Front: L-R: {:.2f}", fddcol, lsdData.FDD));
-            extra.push_back(fmt::format("{}Rear:  L-R: {:.2f}", rddcol, lsdData.RDD));
+            extra.push_back(std::format("{}Front: L-R: {:.2f}", fddcol, lsdData.FDD));
+            extra.push_back(std::format("{}Rear:  L-R: {:.2f}", rddcol, lsdData.RDD));
 
-            extra.push_back(fmt::format("LF/RF [{:.2f}]/[{:.2f}]", lsdData.BrakeLF, lsdData.BrakeRF));
-            extra.push_back(fmt::format("LR/RR [{:.2f}]/[{:.2f}]", lsdData.BrakeLR, lsdData.BrakeRR));
-            extra.push_back(fmt::format("{}LSD: {}",
+            extra.push_back(std::format("LF/RF [{:.2f}]/[{:.2f}]", lsdData.BrakeLF, lsdData.BrakeRF));
+            extra.push_back(std::format("LR/RR [{:.2f}]/[{:.2f}]", lsdData.BrakeLR, lsdData.BrakeRR));
+            extra.push_back(std::format("{}LSD: {}",
                 lsdData.Use ? "~g~" : "~r~",
                 lsdData.Use ? "Active" : "Idle/Off"));
         }
@@ -1742,7 +1743,7 @@ std::vector<std::string> GetAWDInfo(Vehicle vehicle) {
 
     if (driveBiasFOriginal <= 0.0f || driveBiasFOriginal >= 1.0f) {
         return {
-            (fmt::format("Drive layout: {}", driveBiasFOriginal == 0.0f ? "RWD" : "FWD")),
+            (std::format("Drive layout: {}", driveBiasFOriginal == 0.0f ? "RWD" : "FWD")),
             "Not AWD compatible.",
             "Set fDriveBiasFront in handling data to between 0.10 and 0.90 for AWD support."
         };
@@ -1750,7 +1751,7 @@ std::vector<std::string> GetAWDInfo(Vehicle vehicle) {
 
     if (driveBiasFCustom <= 0.0f || driveBiasFCustom >= 1.0f) {
         return {
-            (fmt::format("Custom drive layout corrupt: Full {}", driveBiasFOriginal == 0.0f ? "RWD" : "FWD")),
+            (std::format("Custom drive layout corrupt: Full {}", driveBiasFOriginal == 0.0f ? "RWD" : "FWD")),
             "This shouldn't happen.",
             "Reset custom drive layout to between 0.01 and 0.99."
         };
@@ -1769,12 +1770,12 @@ std::vector<std::string> GetAWDInfo(Vehicle vehicle) {
     }
 
     awdInfo.emplace_back("Drive layout: AWD");
-    std::string baseDistrStr = fmt::format("Base distribution: F{:.0f}/R{:.0f}", driveBiasFrontBase * 100.0f, (1.0f - driveBiasFrontBase) * 100.0f);
+    std::string baseDistrStr = std::format("Base distribution: F{:.0f}/R{:.0f}", driveBiasFrontBase * 100.0f, (1.0f - driveBiasFrontBase) * 100.0f);
     if (replaced) {
         awdInfo.emplace_back("AWD mode: Adaptive");
         awdInfo.push_back(baseDistrStr);
-        awdInfo.push_back(fmt::format("Live distribution: F{:.0f}/R{:.0f}", driveBiasFrontLive * 100.0f, (1.0f - driveBiasFrontLive) * 100.0f));
-        awdInfo.push_back(fmt::format("Live transfer percentage: {:.0f}%", AWD::GetTransferValue() * 100.0f));
+        awdInfo.push_back(std::format("Live distribution: F{:.0f}/R{:.0f}", driveBiasFrontLive * 100.0f, (1.0f - driveBiasFrontLive) * 100.0f));
+        awdInfo.push_back(std::format("Live transfer percentage: {:.0f}%", AWD::GetTransferValue() * 100.0f));
     }
     else {
         awdInfo.emplace_back("AWD mode: Static");
@@ -1850,8 +1851,9 @@ void update_awdsettingsmenu() {
         "Flags for extra features. Current flags:",
         "Bit 0: Enable torque transfer dial on y97y's BNR32",
     };
-    std::string specialFlagsStr = fmt::format("{:08X}", g_settings().DriveAssists.AWD.SpecialFlags);
-    if (g_menu.Option(fmt::format("Special flags (hex): {}", specialFlagsStr), specialFlagsDescr)) {
+    uint32_t specialFlags = g_settings().DriveAssists.AWD.SpecialFlags;
+    std::string specialFlagsStr = std::format("{:08X}", specialFlags);
+    if (g_menu.Option(std::format("Special flags (hex): {}", specialFlagsStr), specialFlagsDescr)) {
         std::string newFlags = GetKbEntryStr(specialFlagsStr);
         SetFlags(g_settings().DriveAssists.AWD.SpecialFlags, newFlags);
     }
@@ -1873,7 +1875,7 @@ void update_cruisecontrolsettingsmenu() {
     std::string speedNameUnit = GetSpeedUnitMultiplier(g_settings.HUD.Speedo.Speedo, speedValMul);
     float speedValUnit = speedValRaw * speedValMul;
 
-    if (g_menu.FloatOptionCb(fmt::format("Speed ({})", speedNameUnit), speedValUnit, 0.0f, 500.0f, 5.0f,
+    if (g_menu.FloatOptionCb(std::format("Speed ({})", speedNameUnit), speedValUnit, 0.0f, 500.0f, 5.0f,
         getKbEntry,
         { "Speed for cruise control. Speeds higher than vehicle top speed are ignored.",
           "Can also be changed with hotkeys or wheel buttons." })) {
@@ -1929,7 +1931,7 @@ void update_speedlimitersettingsmenu() {
     std::string speedNameUnit = GetSpeedUnitMultiplier(g_settings.HUD.Speedo.Speedo, speedValMul);
     float speedValUnit = speedValRaw * speedValMul;
 
-    if (g_menu.FloatOptionCb(fmt::format("Max speed ({})", speedNameUnit), speedValUnit, 0.0f, 500.0f, 5.0f,
+    if (g_menu.FloatOptionCb(std::format("Max speed ({})", speedNameUnit), speedValUnit, 0.0f, 500.0f, 5.0f,
         getKbEntry,
         { "Electronically limit speed to this." })) {
 
@@ -2219,7 +2221,7 @@ void update_cameramovementoptionsmenu(bool bike) {
     else
         modeName = "Bike";
 
-    g_menu.Subtitle(fmt::format("{} - {}", MenuSubtitleConfig(), modeName));
+    g_menu.Subtitle(std::format("{} - {}", MenuSubtitleConfig(), modeName));
 
     VehicleConfig::SMovement& movement = *pMovement;
 
@@ -2312,7 +2314,7 @@ void update_devoptionsmenu() {
         { "Exports the base configuration to the Vehicles folder. If you lost it, or something." })) {
         const std::string saveFile = "baseVehicleConfig";
         const std::string vehConfigDir = Paths::GetModuleFolder(Paths::GetOurModuleHandle()) + Constants::ModDir + "\\Vehicles";
-        const std::string finalFile = fmt::format("{}\\{}.ini", vehConfigDir, saveFile);
+        const std::string finalFile = std::format("{}\\{}.ini", vehConfigDir, saveFile);
 
         VehicleConfig config;
         config.ModelNames = { "Model0", "Model1", "Model2" };
@@ -2372,13 +2374,13 @@ void update_debugmenu() {
             if (i == index) {
                 mark = "[*]";
             }
-            extras.emplace_back(fmt::format("{} {}", mark, anim.Dictionary));
+            extras.emplace_back(std::format("{} {}", mark, anim.Dictionary));
         }
 
         extras.emplace_back("");
         extras.emplace_back("* marks active dictionary.");
         if (index >= SteeringAnimation::GetAnimations().size()) {
-            extras.push_back(fmt::format("Index out of range ({})", index));
+            extras.push_back(std::format("Index out of range ({})", index));
         }
 
         extras.emplace_back("");
@@ -2429,12 +2431,12 @@ void update_debugmenu() {
 
             if (FAILED(result)) {
                 logger.Write(DEBUG, "Failed to DirectInput8Create, HRESULT: %d", result);
-                diDevicesInfo_.push_back(fmt::format("Failed to get DI, HRESULT: {}", result));
+                diDevicesInfo_.push_back(std::format("Failed to get DI, HRESULT: {}", result));
             }
 
             DIDeviceFactory::Get().Enumerate(lpDi);
 
-            diDevicesInfo_.push_back(fmt::format("Devices: {}", DIDeviceFactory::Get().GetEntryCount()));
+            diDevicesInfo_.push_back(std::format("Devices: {}", DIDeviceFactory::Get().GetEntryCount()));
             diDevicesInfo_.push_back("");
 
             for (int i = 0; i < DIDeviceFactory::Get().GetEntryCount(); i++) {
@@ -2443,10 +2445,10 @@ void update_debugmenu() {
                 GUID guid = device->diDeviceInstance.guidInstance;
 
                 // Name
-                diDevicesInfo_.push_back(fmt::format("{}", devName));
-                diDevicesInfo_.push_back(fmt::format("    GUID: {}", GUID2String(guid)));
-                diDevicesInfo_.push_back(fmt::format("    Type: 0x{:X}", device->diDevCaps.dwDevType));
-                diDevicesInfo_.push_back(fmt::format("    FFB: {}", device->diDevCaps.dwFlags & DIDC_FORCEFEEDBACK));
+                diDevicesInfo_.push_back(std::format("{}", devName));
+                diDevicesInfo_.push_back(std::format("    GUID: {}", GUID2String(guid)));
+                diDevicesInfo_.push_back(std::format("    Type: 0x{:X}", device->diDevCaps.dwDevType));
+                diDevicesInfo_.push_back(std::format("    FFB: {}", device->diDevCaps.dwFlags & DIDC_FORCEFEEDBACK));
                 diDevicesInfo_.push_back("");
             }
         };

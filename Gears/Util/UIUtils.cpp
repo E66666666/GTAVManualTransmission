@@ -1,12 +1,12 @@
 #include "UIUtils.h"
 
-#include "inc/natives.h"
-#include "inc/enums.h"
-#include "fmt/format.h"
-#include <algorithm>
-
 #include "../Constants.h"
 #include "../ScriptSettings.hpp"
+
+#include <inc/natives.h>
+#include <inc/enums.h>
+#include <format>
+#include <algorithm>
 
 extern ScriptSettings g_settings;
 
@@ -49,7 +49,7 @@ void UI::Notify(int level, const std::string& message, bool removePrevious) {
     if (removePrevious) {
         notifHandleAddr = &notificationHandle;
     }
-    showNotification(fmt::format("{}\n{}", Constants::NotificationPrefix, message), notifHandleAddr);
+    showNotification(std::format("{}\n{}", Constants::NotificationPrefix, message), notifHandleAddr);
 }
 
 void UI::ShowText(float x, float y, float scale, const std::string &text,

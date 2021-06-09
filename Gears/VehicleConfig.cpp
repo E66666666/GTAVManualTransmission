@@ -3,8 +3,8 @@
 #include "SettingsCommon.h"
 #include "Util/Logger.hpp"
 #include "Util/Strings.hpp"
-#include <fmt/format.h>
 #include <simpleini/SimpleIni.h>
+#include <format>
 #include <filesystem>
 
 #define CHECK_LOG_SI_ERROR(result, operation) \
@@ -48,7 +48,7 @@ void VehicleConfig::LoadSettings() {
     CSimpleIniA ini;
     ini.SetUnicode();
     SI_Error result = ini.LoadFile(mFile.c_str());
-    CHECK_LOG_SI_ERROR(result, fmt::format("load {}", mFile).c_str());
+    CHECK_LOG_SI_ERROR(result, std::format("load {}", mFile).c_str());
 
     Name = std::filesystem::path(mFile).stem().string();
 
@@ -287,18 +287,18 @@ void VehicleConfig::saveGeneral() {
     CSimpleIniA ini;
     ini.SetUnicode();
     SI_Error result = ini.LoadFile(mFile.c_str());
-    CHECK_LOG_SI_ERROR(result, fmt::format("load {}", mFile).c_str());
+    CHECK_LOG_SI_ERROR(result, std::format("load {}", mFile).c_str());
 
     // [ID]
-    std::string modelNames = fmt::format("{}", fmt::join(ModelNames, " "));
+    std::string modelNames = std::format("{}", (ModelNames, " "));
     ini.SetValue("ID", "ModelName", modelNames.c_str());
 
     std::vector<std::string> fmtPlates;
     for(const auto& plate : Plates) {
-        fmtPlates.push_back(fmt::format("[{}]", plate));
+        fmtPlates.push_back(std::format("[{}]", plate));
     }
 
-    std::string plates = fmt::format("{}", fmt::join(fmtPlates, ", "));
+    std::string plates = std::format("{}", (fmtPlates, ", "));
     ini.SetValue("ID", "Plate", plates.c_str());
 
     ini.SetValue("ID", "Description", Description.c_str());
@@ -488,7 +488,7 @@ void VehicleConfig::saveGeneral() {
     SAVE_VAL("CAM", "BikeLongBackwardLimit", Misc.Camera.Bike.Movement.LongBackwardLimit);
 
     result = ini.SaveFile(mFile.c_str());
-    CHECK_LOG_SI_ERROR(result, fmt::format("save {}", mFile).c_str());
+    CHECK_LOG_SI_ERROR(result, std::format("save {}", mFile).c_str());
 }
 
 #pragma warning(pop)
